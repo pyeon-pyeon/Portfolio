@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="description"
+    content="이미지와 한글 문구를 조합해 카드와 SNS 이미지를 만드는 편집기"
+  >
+
+  <title>짤·카드 스튜디오</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="studio.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#editor">편집기로 바로가기</a>
+
+  <main class="studio-layout">
+    <header class="studio-header">
+      <h1>짤·카드 스튜디오</h1>
+      <p>이미지와 문구를 조합하고 완성한 카드를 PNG로 저장하세요.</p>
+    </header>
+
+    <!-- 이미지와 문구 편집 -->
+    <section
+      id="editor"
+      class="editor-panel"
+      aria-labelledby="editor-title"
+    >
+      <h2 id="editor-title">카드 편집</h2>
+
+      <fieldset>
+        <legend>이미지 불러오기</legend>
+
+        <p id="image-help">
+          사용 권한이 있는 PNG·JPEG 이미지를 선택하세요.
+          이미지는 서버로 전송하지 않고 이 브라우저에서 처리합니다.
+        </p>
+
+        <label for="image-file">이미지 파일</label>
+        <input
+          id="image-file"
+          type="file"
+          accept="image/png,image/jpeg"
+          aria-describedby="image-help image-info"
+        >
+
+        <p id="image-info">선택한 이미지가 없습니다.</p>
+
+        <button id="remove-image-button" type="button" disabled>
+          이미지 제거
+        </button>
+      </fieldset>
+
+      <fieldset>
+        <legend>문구 편집</legend>
+
+        <label for="caption-text">카드에 넣을 문구</label>
+        <textarea
+          id="caption-text"
+          rows="4"
+          placeholder="여기에 문구를 입력하세요."
+          aria-describedby="caption-help"
+        ></textarea>
+
+        <p id="caption-help">
+          Enter로 줄을 나눌 수 있습니다.
+          긴 문구는 이미지 폭에 맞춰 자동으로 줄바꿈됩니다.
+        </p>
+
+        <label for="font-size">글자 크기</label>
+        <input
+          id="font-size"
+          type="range"
+          min="16"
+          max="120"
+          step="1"
+          value="48"
+        >
+        <p>
+          출력 이미지 기준
+          <output id="font-size-value" for="font-size">48px</output>
+        </p>
+
+        <label for="text-color">글자 색</label>
+        <input
+          id="text-color"
+          type="color"
+          value="#ffffff"
+        >
+
+        <label for="text-align">문구 정렬</label>
+        <select id="text-align">
+          <option value="left">왼쪽</option>
+          <option value="center" selected>가운데</option>
+          <option value="right">오른쪽</option>
+        </select>
+
+        <label for="text-x">문구 영역의 가로 중심</label>
+        <input
+          id="text-x"
+          type="range"
+          min="10"
+          max="90"
+          step="1"
+          value="50"
+        >
+        <p>
+          이미지 왼쪽에서
+          <output id="text-x-value" for="text-x">50%</output>
+        </p>
+
+        <label for="text-y">문구 영역의 세로 시작 위치</label>
+        <input
+          id="text-y"
+          type="range"
+          min="5"
+          max="90"
+          step="1"
+          value="70"
+        >
+        <p>
+          이미지 위쪽에서
+          <output id="text-y-value" for="text-y">70%</output>
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <legend>화면비와 배경</legend>
+
+        <label for="aspect-ratio">이미지 화면비</label>
+        <select id="aspect-ratio">
+          <option value="1:1">1:1 — 정사각형</option>
+          <option value="4:5">4:5 — 세로 카드</option>
+          <option value="9:16">9:16 — 세로 스토리</option>
+        </select>
+
+        <label for="image-fit">이미지 배치</label>
+        <select id="image-fit">
+          <option value="contain">
+            전체 이미지 표시 — 남는 영역은 배경색
+          </option>
+          <option value="cover">
+            화면 채우기 — 이미지 가장자리가 잘릴 수 있음
+          </option>
+        </select>
+
+        <label for="background-color">배경색</label>
+        <input
+          id="background-color"
+          type="color"
+          value="#172743"
+        >
+      </fieldset>
+
+      <button id="reset-editor-button" type="button">
+        편집 내용 초기화
+      </button>
+
+      <p>편집 초기화는 저장한 템플릿을 삭제하지 않습니다.</p>
+    </section>
+
+    <!-- 미리보기와 PNG 다운로드 -->
+    <section
+      class="preview-panel"
+      aria-labelledby="preview-title"
+    >
+      <h2 id="preview-title">미리보기</h2>
+
+      <p id="preview-help">
+        미리보기와 PNG 다운로드는 같은 캔버스를 사용합니다.
+        화면에서는 작게 표시되지만 아래 출력 크기로 저장됩니다.
+      </p>
+
+      <div class="canvas-container">
+        <canvas
+          id="preview-canvas"
+          width="1080"
+          height="1080"
+          role="img"
+          aria-label="카드 미리보기"
+          aria-describedby="preview-help preview-description"
+        >
+          이 브라우저는 Canvas를 지원하지 않습니다.
+          최신 브라우저에서 열어 주세요.
+        </canvas>
+      </div>
+
+      <p id="preview-description">
+        이미지와 문구가 없는 기본 배경입니다.
+      </p>
+
+      <p>
+        출력 크기:
+        <output id="output-size">1080 × 1080px</output>
+      </p>
+
+      <button id="download-png-button" type="button">
+        PNG 다운로드
+      </button>
+
+      <p>
+        출력 이미지는 원본을 다시 그려 생성합니다.
+        원본 파일의 EXIF·GPS 메타데이터는 복사하지 않습니다.
+      </p>
+    </section>
+
+    <!-- 사용자 템플릿 -->
+    <section
+      class="templates-panel"
+      aria-labelledby="templates-title"
+    >
+      <h2 id="templates-title">내 템플릿</h2>
+
+      <p id="template-help">
+        이미지와 문구, 위치·크기·색, 화면비·배경 설정을 함께 저장합니다.
+        저장한 템플릿은 이 브라우저에서 새로고침해도 유지됩니다.
+      </p>
+
+      <label for="template-name">템플릿 이름</label>
+      <input
+        id="template-name"
+        type="text"
+        maxlength="60"
+        placeholder="예: 응원 카드"
+        aria-describedby="template-help"
+      >
+
+      <button id="create-template-button" type="button">
+        현재 편집을 새 템플릿으로 저장
+      </button>
+
+      <label for="template-list">저장한 템플릿</label>
+      <select id="template-list" disabled>
+        <option value="">저장한 템플릿이 없습니다.</option>
+      </select>
+
+      <div class="template-actions">
+        <button id="load-template-button" type="button" disabled>
+          불러오기
+        </button>
+
+        <button id="update-template-button" type="button" disabled>
+          현재 편집으로 수정
+        </button>
+
+        <button id="delete-template-button" type="button" disabled>
+          선택한 템플릿 삭제
+        </button>
+      </div>
+
+      <p id="template-status" role="status" aria-live="polite">
+        저장한 템플릿이 없습니다.
+      </p>
+    </section>
+
+    <!-- JSON 백업과 복원 -->
+    <section
+      class="backup-panel"
+      aria-labelledby="backup-title"
+    >
+      <h2 id="backup-title">템플릿 백업·복원</h2>
+
+      <button id="export-json-button" type="button" disabled>
+        템플릿 JSON 다운로드
+      </button>
+
+      <label for="import-json-file">백업 JSON 불러오기</label>
+      <input
+        id="import-json-file"
+        type="file"
+        accept=".json,application/json"
+        aria-describedby="json-help"
+      >
+
+      <p id="json-help">
+        이 편집기에서 내보낸 JSON을 사용하세요.
+        백업에는 이미지와 문구가 포함되므로 공유 전에 내용을 확인하세요.
+        복원은 검증 후 기존 목록에 추가하며, 잘못된 파일은 기존 편집과
+        템플릿을 변경하지 않고 거부합니다.
+      </p>
+    </section>
+
+    <!-- 처리 결과와 오류 안내 -->
+    <p
+      id="studio-status"
+      class="studio-status"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      이미지와 문구를 선택해 편집을 시작하세요.
+    </p>
+
+    <noscript>
+      <p>이 편집기를 사용하려면 JavaScript를 활성화해 주세요.</p>
+    </noscript>
+  </main>
+</body>
+</html>

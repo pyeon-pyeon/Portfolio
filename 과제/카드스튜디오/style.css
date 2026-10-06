@@ -1,0 +1,517 @@
+/* ============================================================
+   기본 설정
+   ============================================================ */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f3f6fb;
+  color: #23324a;
+  font-family: "Malgun Gothic", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 8px;
+  color: #172743;
+  font-size: 32px;
+  line-height: 1.35;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #172743;
+  font-size: 22px;
+}
+
+p {
+  margin-bottom: 14px;
+}
+
+/* ============================================================
+   전체 배치
+   ============================================================ */
+.studio-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+
+  width: min(calc(100% - 48px), 1200px);
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+.studio-header,
+.studio-status,
+noscript {
+  grid-column: 1 / -1;
+}
+
+.studio-header p {
+  margin-bottom: 0;
+  color: #52617a;
+}
+
+.editor-panel,
+.preview-panel,
+.templates-panel,
+.backup-panel {
+  min-width: 0;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #c4cede;
+  border-radius: 10px;
+}
+
+/* PC에서 스크롤하며 편집할 때 미리보기 유지 */
+.preview-panel {
+  position: static;
+  top: 20px;
+}
+
+/* ============================================================
+   편집 항목
+   ============================================================ */
+fieldset {
+  min-width: 0;
+  margin: 0 0 22px;
+  padding: 18px;
+  border: 1px solid #c4cede;
+  border-radius: 8px;
+}
+
+legend {
+  padding: 0 8px;
+  color: #234f91;
+  font-weight: 700;
+}
+
+label {
+  display: block;
+  margin: 16px 0 7px;
+  font-weight: 700;
+}
+
+fieldset label:first-of-type {
+  margin-top: 8px;
+}
+
+input[type="text"],
+input[type="file"],
+select,
+textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+
+  background: #ffffff;
+  color: #23324a;
+  border: 1px solid #71819b;
+  border-radius: 5px;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+textarea::placeholder,
+input::placeholder {
+  color: #637089;
+  opacity: 1;
+}
+
+input[type="file"] {
+  padding: 8px;
+}
+
+input[type="file"]::file-selector-button {
+  min-height: 36px;
+  margin-right: 10px;
+  padding: 6px 10px;
+  background: #e6edf8;
+  color: #23324a;
+  border: 1px solid #71819b;
+  border-radius: 4px;
+  font: inherit;
+  cursor: pointer;
+}
+
+input[type="range"] {
+  display: block;
+  width: 100%;
+  min-height: 36px;
+  margin: 0;
+  accent-color: #234f91;
+  cursor: pointer;
+}
+
+input[type="color"] {
+  display: block;
+  width: 72px;
+  height: 44px;
+  padding: 3px;
+  background: #ffffff;
+  border: 1px solid #71819b;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+output {
+  color: #234f91;
+  font-weight: 700;
+}
+
+#image-help,
+#image-info,
+#caption-help,
+#preview-help,
+#preview-description,
+#template-help,
+#json-help {
+  color: #52617a;
+  font-size: 14px;
+}
+
+#image-info,
+#caption-help {
+  margin-top: 10px;
+}
+
+/* ============================================================
+   버튼과 키보드 초점
+   ============================================================ */
+button {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 10px 16px;
+  background: #234f91;
+  color: #ffffff;
+  border: 1px solid #234f91;
+  border-radius: 5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: #193c70;
+}
+
+button:active:not(:disabled) {
+  background: #122d56;
+}
+
+button:disabled {
+  background: #e6ebf3;
+  color: #52617a;
+  border-color: #b5c1d3;
+  cursor: not-allowed;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background: #edf1f7;
+  color: #52617a;
+  cursor: not-allowed;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 3px solid #234f91;
+  outline-offset: 4px;
+}
+
+#remove-image-button {
+  background: #ffffff;
+  color: #234f91;
+}
+
+#remove-image-button:hover:not(:disabled) {
+  background: #e6edf8;
+}
+
+#remove-image-button:disabled {
+  color: #52617a;
+  border-color: #b5c1d3;
+}
+
+#reset-editor-button {
+  margin-bottom: 12px;
+  background: #ffffff;
+  color: #234f91;
+}
+
+#reset-editor-button:hover:not(:disabled) {
+  background: #e6edf8;
+}
+
+/* ============================================================
+   미리보기
+   ============================================================ */
+.canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+  padding: 16px;
+  background: #e6ebf3;
+  border: 1px solid #c4cede;
+  border-radius: 6px;
+}
+
+#preview-canvas {
+  display: block;
+
+  /* 실제 파일 크기는 HTML·JS의 canvas.width/height가 결정 */
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 520px;
+
+  background: #172743;
+  box-shadow: 0 4px 16px rgb(23 39 67 / 15%);
+}
+
+#preview-description {
+  margin-top: 14px;
+}
+
+#download-png-button {
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.preview-panel > p:last-child {
+  margin-bottom: 0;
+  color: #52617a;
+  font-size: 14px;
+}
+
+/* ============================================================
+   사용자 템플릿
+   ============================================================ */
+#create-template-button {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.template-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+#delete-template-button {
+  background: #ffffff;
+  color: #9b2634;
+  border-color: #9b2634;
+}
+
+#delete-template-button:hover:not(:disabled) {
+  background: #fff0f1;
+}
+
+#delete-template-button:disabled {
+  background: #e6ebf3;
+  color: #52617a;
+  border-color: #b5c1d3;
+}
+
+#template-status {
+  margin: 14px 0 0;
+  color: #234f91;
+  font-size: 14px;
+}
+
+/* ============================================================
+   JSON 백업·복원
+   ============================================================ */
+#export-json-button {
+  margin-bottom: 8px;
+}
+
+#json-help {
+  margin-top: 12px;
+}
+
+.backup-panel > p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   처리 결과와 오류 안내
+   ============================================================ */
+.studio-status {
+  margin: 0;
+  padding: 16px 20px;
+  background: #e6edf8;
+  color: #23324a;
+  border-left: 4px solid #234f91;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 100;
+  padding: 10px 14px;
+  background: #ffffff;
+  color: #234f91;
+}
+
+.skip-link:focus {
+  top: 10px;
+}
+
+/* ============================================================
+   모바일·작은 화면
+   ============================================================ */
+@media (max-width: 850px) {
+  .studio-layout {
+    grid-template-columns: minmax(0, 1fr);
+    width: calc(100% - 32px);
+    gap: 18px;
+    padding: 24px 0;
+  }
+
+  .studio-header,
+  .studio-status,
+  noscript {
+    grid-column: 1;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .editor-panel,
+  .preview-panel,
+  .templates-panel,
+  .backup-panel {
+    padding: 18px;
+  }
+
+  .preview-panel {
+    position: static;
+  }
+
+  fieldset {
+    padding: 14px;
+  }
+
+  .canvas-container {
+    padding: 10px;
+  }
+
+  #preview-canvas {
+    max-height: 460px;
+  }
+
+  .template-actions button {
+    flex: 1 1 140px;
+  }
+}
+
+/* ============================================================
+   움직임 줄이기
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 왼쪽 편집 영역과 오른쪽 세 영역 배치 */
+.studio-layout {
+  grid-template-rows: auto auto auto auto auto;
+}
+
+/* 제목 */
+.studio-header {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+/* 왼쪽: 편집 도구가 세 행을 차지 */
+.editor-panel {
+  grid-column: 1;
+  grid-row: 2 / 5;
+}
+
+/* 오른쪽: 미리보기 → 템플릿 → 백업 */
+.preview-panel {
+  grid-column: 2;
+  grid-row: 2;
+  position: static;
+}
+
+.templates-panel {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.backup-panel {
+  grid-column: 2;
+  grid-row: 4;
+}
+
+/* 공통 안내 */
+.studio-status {
+  grid-column: 1 / -1;
+  grid-row: 5;
+}
+
+/* 모바일에서는 HTML 순서대로 세로 배치 */
+@media (max-width: 850px) {
+  .studio-layout {
+    grid-template-rows: none;
+  }
+
+  .studio-layout > * {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+/* 왼쪽 박스를 오른쪽 전체 높이에 맞춤 */
+.editor-panel {
+  align-self: stretch;
+}
+
+/* 모바일에서는 내용에 맞는 높이 사용 */
+@media (max-width: 850px) {
+  .editor-panel {
+    align-self: start;
+  }
+}
