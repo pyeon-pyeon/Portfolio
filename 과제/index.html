@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    name="description"
+    content="IT·보안 직무 채용 담당자를 위한 편승훈의 경험과 일하는 방식 소개"
+  >
+  <title>편승훈 | IT·보안 소개</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <a class="skip" href="#main">본문 바로가기</a>
+
+  <main id="main">
+    <!-- 소개와 페이지 목적 -->
+    <header>
+      <p class="label">IT · SECURITY</p>
+      <h1>편승훈의 IT·보안 소개</h1>
+      <p class="purpose">
+        이 페이지는 IT·보안 직무 채용 담당자에게 저의 경력,
+        담당 경험, 일하는 방식을 보여주는 개인 소개 페이지입니다.
+      </p>
+    </header>
+
+    <!-- 강점 3개: 상황·행동·결과 -->
+    <section class="experience" aria-labelledby="strengths">
+      <h2 id="strengths">경험으로 소개하는 강점 3가지</h2>
+
+      <div class="cards">
+        <article>
+          <h3>01. 주도성</h3>
+          <dl>
+            <dt>상황</dt>
+            <dd>
+              의료기기 소프트웨어의 구조부터 구현까지
+              직접 정해야 했습니다.
+            </dd>
+
+            <dt>행동</dt>
+            <dd>
+              아키텍처·DB를 설계하고 로그인, 결과 저장,
+              PDF 생성과 배포를 구현했습니다.
+            </dd>
+
+            <dt>결과</dt>
+            <dd>
+              촬영부터 진단 결과 확인·PDF 출력까지 이어지는
+              소프트웨어를 구축했습니다.
+            </dd>
+          </dl>
+        </article>
+
+        <article>
+          <h3>02. 학습 민첩성</h3>
+          <dl>
+            <dt>상황</dt>
+            <dd>
+              Spring을 배웠지만 실무에는 처음 접하는
+              Rust·Svelte·Tauri가 필요했습니다.
+            </dd>
+
+            <dt>행동</dt>
+            <dd>
+              각 기술의 구조와 사용법을 배우고
+              백엔드·화면·데스크톱 앱에 적용했습니다.
+            </dd>
+
+            <dt>결과</dt>
+            <dd>
+              새로운 기술로 로그인과 진단 결과 기능을
+              구현하고 배포했습니다.
+            </dd>
+          </dl>
+        </article>
+
+        <article>
+          <h3>03. 문제 해결력</h3>
+          <dl>
+            <dt>상황</dt>
+            <dd>
+              서버에서 AI 추론을 수행할 때
+              동시 요청으로 응답이 지연됐습니다.
+            </dd>
+
+            <dt>행동</dt>
+            <dd>
+              추론 실행 위치를 서버에서
+              각 장치의 로컬 환경으로 전환했습니다.
+            </dd>
+
+            <dt>결과</dt>
+            <dd>
+              추론을 각 장치에서 수행하도록 바꾸어
+              서버에 집중되던 추론 부하를 줄였습니다.
+            </dd>
+          </dl>
+        </article>
+      </div>
+
+      <!-- 공개 가능한 결과 문장과 펼치기 기능 -->
+      <aside class="evidence" aria-labelledby="evidence-title">
+        <h3 id="evidence-title">
+          문제 해결력의 근거 · 처리 구조 변경
+        </h3>
+
+        <p>
+          기존에는 서버에서 처리하던 AI 추론을
+          각 장치의 로컬 환경에서 처리하도록 변경했습니다.
+        </p>
+
+        <details>
+          <summary>추론 구조 변경 과정 보기</summary>
+
+          <p>
+            <strong>변경 전:</strong>
+            서버가 AI 추론을 처리해 동시 요청 시 응답이 지연됐습니다.
+          </p>
+
+          <p>
+            <strong>변경 후:</strong>
+            각 장치에서 추론을 수행하도록 변경해
+            서버에 집중되던 추론 부하를 줄였습니다.
+          </p>
+
+          <p>
+            담당 경험에 따른 결과 설명이며,
+            내부 코드와 환자 자료는 공개하지 않습니다.
+          </p>
+        </details>
+      </aside>
+    </section>
+
+    <!-- 공개·비공개 범위 -->
+    <section class="privacy" aria-labelledby="privacy-title">
+      <h2 id="privacy-title">공개 범위 점검표</h2>
+
+      <div class="scope">
+        <div>
+          <h3>공개할 정보</h3>
+          <ul>
+            <li>이름과 간단한 자기소개</li>
+            <li>경력 요약과 직접 담당한 업무</li>
+            <li>사용 기술과 공개 가능한 프로젝트 설명</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>공개하지 않을 정보</h3>
+          <ul>
+            <li>전화번호와 상세 주소</li>
+            <li>회사 내부 코드와 서버 접속 정보</li>
+            <li>환자·고객 개인정보와 계정·비밀값</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <a
+        href="https://github.com/pyeon-pyeon/Portfolio"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        이 페이지의 GitHub 소스 저장소 (새 탭)
+      </a>
+    </footer>
+  </main>
+</body>
+</html>

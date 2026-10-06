@@ -1,0 +1,210 @@
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: #23324a;
+      background: #f3f6fb;
+      font-family: "Malgun Gothic", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: auto;
+      padding: 32px 24px;
+    }
+
+    .label {
+      margin: 0 0 6px;
+      color: #385687;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      color: #172743;
+      font-size: 34px;
+      line-height: 1.35;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      color: #172743;
+      font-size: 22px;
+    }
+
+    h3 {
+      margin: 0 0 12px;
+      color: #234f91;
+      font-size: 20px;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    header {
+      padding-bottom: 22px;
+      border-bottom: 1px solid #c7d2e4;
+    }
+
+    .purpose {
+      max-width: 900px;
+    }
+
+    .experience {
+      margin-top: 22px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    article {
+      padding: 20px;
+      background: #ffffff;
+      border: 1px solid #c7d2e4;
+      border-radius: 8px;
+    }
+
+    dl {
+      margin: 0;
+    }
+
+    dt {
+      margin-top: 10px;
+      color: #23324a;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    dd {
+      margin: 3px 0 0;
+    }
+
+    .evidence {
+      margin-top: 16px;
+      padding: 16px 20px;
+      background: #e6edf8;
+      border-left: 4px solid #234f91;
+      border-radius: 4px;
+    }
+
+    .evidence h3 {
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+
+    details {
+      margin-top: 8px;
+    }
+
+    summary {
+      width: fit-content;
+      padding: 7px 8px;
+      color: #214a87;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+
+    details p {
+      margin-top: 8px;
+    }
+
+    a {
+      color: #214a87;
+      text-underline-offset: 4px;
+    }
+
+    a:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid #214a87;
+      outline-offset: 4px;
+    }
+
+    .privacy {
+      margin-top: 26px;
+    }
+
+    .scope {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .scope > div {
+      padding: 16px 20px;
+      background: #ffffff;
+      border: 1px solid #c7d2e4;
+      border-radius: 8px;
+    }
+
+    .scope h3 {
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    footer {
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid #c7d2e4;
+      font-size: 14px;
+    }
+
+    .skip {
+      position: absolute;
+      top: -100px;
+      left: 16px;
+      padding: 10px;
+      background: #ffffff;
+    }
+
+    .skip:focus {
+      top: 8px;
+    }
+
+    /* 모바일에서는 세로로 배치 */
+    @media (max-width: 760px) {
+      main {
+        padding: 24px 18px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .cards,
+      .scope {
+        grid-template-columns: 1fr;
+      }
+
+      article {
+        padding: 18px;
+      }
+    }
+
+    /* 사용자의 움직임 줄이기 설정 반영 */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
