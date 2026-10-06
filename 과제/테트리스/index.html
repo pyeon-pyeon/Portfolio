@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="description"
+    content="30초로 시작하고 줄을 제거하면 시간이 연장되는 테트리스 게임"
+  >
+
+  <title>30초 테트리스</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="game.js" defer></script>
+</head>
+
+<body>
+  <main class="game-layout">
+    <header class="game-header">
+      <h1>30초 테트리스</h1>
+      <p>줄을 제거해 시간을 늘리고 높은 점수에 도전하세요.</p>
+    </header>
+
+    <!-- 게임 규칙과 조작 안내 -->
+    <section class="instructions" aria-labelledby="rules-title">
+      <h2 id="rules-title">게임 규칙</h2>
+
+      <ul>
+        <li>남은 시간 30초, 점수 0점으로 시작합니다.</li>
+        <li>1줄 제거 시 1초, 2줄 제거 시 2초가 추가됩니다.</li>
+        <li>
+          3줄 또는 4줄을 한 번에 제거하면
+          총 5초가 추가됩니다.
+        </li>
+        <li>실제 플레이 시간 1초당 10점을 얻습니다.</li>
+        <li>
+          줄 제거 보너스는 1줄 100점, 2줄 300점,
+          3줄 500점, 4줄 800점입니다.
+        </li>
+        <li>
+          남은 시간이 0이 되거나 새 블록을 놓을 공간이
+          없으면 게임이 종료됩니다.
+        </li>
+      </ul>
+
+      <h2 id="controls-title">조작 방법</h2>
+
+      <p id="keyboard-help">
+        ← · → 또는 A · D 이동 / ↑ 회전 /
+        ↓ 한 칸 내리기 / Space 즉시 낙하
+      </p>
+
+      <p>
+        이동·회전·내리기는 키를 한 번 누를 때 한 번 실행됩니다.
+        키를 길게 눌러도 반복 실행되지 않습니다.
+      </p>
+
+      <p>게임 아래의 조작 버튼으로도 플레이할 수 있습니다.</p>
+
+      <h2 id="pause-help-title">일시정지</h2>
+
+      <p>
+        일시정지 버튼을 누르면 시간과 블록이 멈춥니다.
+        계속하기 버튼을 누르면 이어서 진행합니다.
+      </p>
+
+      <p>
+        다른 탭이나 창으로 이동하면 자동으로 일시정지됩니다.
+        돌아온 뒤에는 계속하기를 눌러 주세요.
+        정지 중에는 플레이 시간과 점수가 증가하지 않습니다.
+      </p>
+    </section>
+
+    <!-- 게임 화면 -->
+    <section class="play-area" aria-labelledby="play-title">
+      <h2 id="play-title">게임</h2>
+
+      <!-- 현재 상태와 점수 -->
+      <dl class="game-stats">
+        <div>
+          <dt>현재 상태</dt>
+          <dd id="game-state" role="status" aria-live="polite">
+            시작 전
+          </dd>
+        </div>
+
+        <div>
+          <dt>남은 시간</dt>
+          <dd><span id="time-left">30.0</span>초</dd>
+        </div>
+
+        <div>
+          <dt>점수</dt>
+          <dd><span id="score">0</span>점</dd>
+        </div>
+
+        <div>
+          <dt>제거한 줄</dt>
+          <dd><span id="lines-cleared">0</span>줄</dd>
+        </div>
+      </dl>
+
+      <!-- 게임 보드 -->
+      <div class="board-container">
+        <canvas
+          id="game-board"
+          width="300"
+          height="600"
+          tabindex="0"
+          aria-label="테트리스 게임 보드, 10열 20행"
+          aria-describedby="keyboard-help board-help"
+        >
+          이 브라우저는 Canvas를 지원하지 않습니다.
+          최신 브라우저에서 게임을 열어 주세요.
+        </canvas>
+      </div>
+
+      <p id="board-help">
+        게임 보드를 클릭하거나 Tab으로 선택한 뒤 조작하세요.
+        Tab을 누르면 보드 밖의 설정과 버튼으로 이동할 수 있습니다.
+      </p>
+
+      <!-- 설정과 저장 기록 -->
+      <section class="settings" aria-labelledby="settings-title">
+        <h3 id="settings-title">설정과 기록</h3>
+
+        <p>
+          최고 점수:
+          <strong id="best-score">0</strong>점
+        </p>
+
+        <div>
+          <label for="difficulty">블록 낙하 간격</label>
+
+          <select id="difficulty">
+            <option value="700">700ms — 기본</option>
+            <option value="900">900ms — 느리게</option>
+          </select>
+        </div>
+
+        <p>
+          낙하 간격은 시작 전에 선택할 수 있습니다.
+          진행 중이나 일시정지 중에는 변경할 수 없습니다.
+        </p>
+
+        <label class="sound-setting" for="sound-enabled">
+          <input
+            id="sound-enabled"
+            type="checkbox"
+          >
+          줄 제거 효과음
+        </label>
+
+        <button id="reset-records-button" type="button">
+          최고 점수·플레이 기록 초기화
+        </button>
+
+        <p>
+          기록은 이 브라우저에 저장됩니다.
+          초기화하면 최고 점수와 플레이 기록이 삭제되고,
+          낙하 간격과 소리 설정은 유지됩니다.
+        </p>
+
+        <p
+          id="storage-message"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </section>
+
+      <!-- 시작·일시정지·재시작 -->
+      <div class="game-actions">
+        <button id="start-button" type="button">
+          게임 시작
+        </button>
+
+        <button id="pause-button" type="button" disabled>
+          일시정지
+        </button>
+
+        <button id="restart-button" type="button" disabled>
+          다시 시작
+        </button>
+      </div>
+
+      <!-- 마우스·터치·키보드 버튼 조작 -->
+      <div
+        class="touch-controls"
+        role="group"
+        aria-label="블록 조작"
+      >
+        <button
+          type="button"
+          data-action="left"
+          aria-label="블록 왼쪽으로 한 칸 이동"
+          disabled
+        >
+          왼쪽
+        </button>
+
+        <button
+          type="button"
+          data-action="rotate"
+          aria-label="블록 시계 방향으로 회전"
+          disabled
+        >
+          회전
+        </button>
+
+        <button
+          type="button"
+          data-action="right"
+          aria-label="블록 오른쪽으로 한 칸 이동"
+          disabled
+        >
+          오른쪽
+        </button>
+
+        <button
+          type="button"
+          data-action="down"
+          aria-label="블록 아래로 한 칸 이동"
+          disabled
+        >
+          내리기
+        </button>
+
+        <button
+          type="button"
+          data-action="drop"
+          aria-label="블록 즉시 낙하"
+          disabled
+        >
+          즉시 낙하
+        </button>
+      </div>
+
+      <!-- 주요 사건 안내 -->
+      <p
+        id="game-message"
+        role="status"
+        aria-live="polite"
+      >
+        게임 시작 버튼을 눌러 주세요.
+      </p>
+
+      <!-- 게임 종료 결과 -->
+      <section
+        id="result-panel"
+        class="result-panel"
+        aria-labelledby="result-title"
+        hidden
+      >
+        <h3 id="result-title">게임 종료</h3>
+
+        <p id="end-reason"></p>
+
+        <dl>
+          <div>
+            <dt>최종 점수</dt>
+            <dd><span id="final-score">0</span>점</dd>
+          </div>
+
+          <div>
+            <dt>플레이 시간</dt>
+            <dd><span id="survival-time">0.0</span>초</dd>
+          </div>
+
+          <div>
+            <dt>제거한 줄</dt>
+            <dd><span id="final-lines">0</span>줄</dd>
+          </div>
+        </dl>
+
+        <p>
+          다시 시작 버튼을 누르면 보드·시간·점수가 초기화됩니다.
+          중간에 다시 시작한 판은 플레이 기록에 남지 않습니다.
+        </p>
+      </section>
+
+      <!-- 난이도 비교용 플레이 기록 -->
+      <section class="records" aria-labelledby="records-title">
+        <h3 id="records-title">최근 20회 플레이 기록</h3>
+
+        <p>
+          종료한 판만 기록합니다. 700ms와 900ms로 각각
+          10회 플레이한 뒤 점수·플레이 시간·종료 원인을 비교하세요.
+        </p>
+
+        <div class="table-scroll">
+          <table>
+            <caption>
+              종료한 판의 낙하 간격·점수·플레이 시간·종료 원인
+            </caption>
+
+            <thead>
+              <tr>
+                <th scope="col">회차</th>
+                <th scope="col">낙하 간격</th>
+                <th scope="col">점수</th>
+                <th scope="col">플레이 시간</th>
+                <th scope="col">종료 원인</th>
+              </tr>
+            </thead>
+
+            <tbody id="records-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>
