@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="description"
+    content="주요 5개 통화 환율을 기록하고 조회 실패 대응을 검사하는 정보판"
+  >
+
+  <title>주요 5개 통화 환율 기록판</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="board.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#board-content">본문 바로가기</a>
+
+  <main class="board-shell">
+    <header class="board-header">
+      <h1>주요 5개 통화 환율 기록판</h1>
+      <p>
+        공개 원천의 환율을 KST 날짜별로 기록하고
+        어제 저장한 값과 비교합니다.
+      </p>
+      <p>
+        환율은 표시한 통화 단위당 원화 금액입니다.
+        은행의 실제 환전 매수·매도 가격과는 다를 수 있습니다.
+      </p>
+    </header>
+
+    <!-- 화면 전환 -->
+    <nav class="screen-navigation" aria-label="정보판 화면">
+      <button
+        id="open-real-button"
+        type="button"
+        aria-controls="real-screen"
+        aria-pressed="true"
+      >
+        실제 환율
+      </button>
+
+      <button
+        id="open-test-button"
+        type="button"
+        aria-controls="test-screen"
+        aria-pressed="false"
+      >
+        실패 대응 검사
+      </button>
+    </nav>
+
+    <div id="board-content">
+      <!-- ==================================================
+           화면 1: 실제 환율
+           ================================================== -->
+      <section
+        id="real-screen"
+        aria-labelledby="real-screen-title"
+      >
+        <h2 id="real-screen-title" tabindex="-1">
+          실제 환율과 일별 기록
+        </h2>
+
+        <div class="board-layout">
+          <!-- 실제 조회 상태 -->
+          <section
+            class="status-panel"
+            aria-labelledby="status-title"
+          >
+            <h3 id="status-title">현재 조회 상태</h3>
+
+            <dl class="status-grid">
+              <div>
+                <dt>데이터 상태</dt>
+                <dd id="data-status">정상 기록 없음</dd>
+              </div>
+
+              <div>
+                <dt>조회 상태</dt>
+                <dd id="request-status">조회 전</dd>
+              </div>
+
+              <div>
+                <dt>원천 기준일·시각</dt>
+                <dd id="source-time">—</dd>
+              </div>
+
+              <div>
+                <dt>마지막 정상 수신 시각</dt>
+                <dd id="received-time">—</dd>
+              </div>
+
+              <div>
+                <dt>최근 조회 시도 시각</dt>
+                <dd id="attempt-time">—</dd>
+              </div>
+
+              <div>
+                <dt>일별 기록 기준 시간대</dt>
+                <dd>Asia/Seoul · KST · UTC+09:00</dd>
+              </div>
+            </dl>
+
+            <button id="refresh-button" type="button">
+              실제 환율 조회·오늘 기록
+            </button>
+
+            <p
+              id="request-message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              아직 정상 환율을 조회하지 않았습니다.
+            </p>
+
+            <p id="next-action">
+              실제 환율 조회 버튼을 눌러 주세요.
+            </p>
+          </section>
+
+          <!-- 통화별 환율 -->
+          <section
+            class="rates-panel"
+            aria-labelledby="rates-title"
+          >
+            <h3 id="rates-title">통화별 환율</h3>
+
+            <p id="comparison-info">
+              어제와의 비교는 오늘과 어제의 KST 일별 기록이
+              모두 있을 때 표시합니다.
+            </p>
+
+            <div class="rate-cards">
+              <article
+                class="rate-card"
+                aria-labelledby="usd-title"
+              >
+                <h4 id="usd-title">미국 달러 · USD</h4>
+                <p>1 USD당 원화</p>
+                <p class="rate-value">
+                  <span id="usd-rate">—</span> 원
+                </p>
+                <p id="usd-change">비교 기록 없음</p>
+              </article>
+
+              <article
+                class="rate-card"
+                aria-labelledby="eur-title"
+              >
+                <h4 id="eur-title">유로존 유로 · EUR</h4>
+                <p>1 EUR당 원화</p>
+                <p class="rate-value">
+                  <span id="eur-rate">—</span> 원
+                </p>
+                <p id="eur-change">비교 기록 없음</p>
+              </article>
+
+              <article
+                class="rate-card"
+                aria-labelledby="jpy-title"
+              >
+                <h4 id="jpy-title">일본 엔 · JPY</h4>
+                <p>100 JPY당 원화</p>
+                <p class="rate-value">
+                  <span id="jpy-rate">—</span> 원
+                </p>
+                <p id="jpy-change">비교 기록 없음</p>
+              </article>
+
+              <article
+                class="rate-card"
+                aria-labelledby="cny-title"
+              >
+                <h4 id="cny-title">중국 위안 · CNY</h4>
+                <p>1 CNY당 원화</p>
+                <p class="rate-value">
+                  <span id="cny-rate">—</span> 원
+                </p>
+                <p id="cny-change">비교 기록 없음</p>
+              </article>
+
+              <article
+                class="rate-card"
+                aria-labelledby="gbp-title"
+              >
+                <h4 id="gbp-title">영국 파운드 · GBP</h4>
+                <p>1 GBP당 원화</p>
+                <p class="rate-value">
+                  <span id="gbp-rate">—</span> 원
+                </p>
+                <p id="gbp-change">비교 기록 없음</p>
+              </article>
+            </div>
+
+            <p>
+              원천 기준일이 같으면 서로 다른 날 조회했더라도
+              같은 환율일 수 있습니다.
+              비교값은 저장한 원천 환율의 차이입니다.
+            </p>
+          </section>
+
+          <!-- 출처 -->
+          <section
+            class="source-panel"
+            aria-labelledby="source-title"
+          >
+            <h3 id="source-title">출처와 값의 의미</h3>
+
+            <dl>
+              <div>
+                <dt>실제 공개 원천</dt>
+                <dd id="source-name">조회 코드 연결 전</dd>
+              </div>
+
+              <div>
+                <dt>환율 종류·산출 방식</dt>
+                <dd id="rate-method">
+                  원천의 환율 종류와 계산 방식을 표시합니다.
+                </dd>
+              </div>
+
+              <div>
+                <dt>출처 주소</dt>
+                <dd>
+                  <a
+                    id="source-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-disabled="true"
+                  >
+                    출처 연결 전
+                  </a>
+                </dd>
+              </div>
+            </dl>
+
+            <p>
+              원천이 날짜만 제공하면 기준일만 표시합니다.
+              제공하지 않은 발표 시각은 임의로 만들지 않습니다.
+            </p>
+          </section>
+
+          <!-- 실제 응답 근거 -->
+          <section
+            class="evidence-panel"
+            aria-labelledby="evidence-title"
+          >
+            <h3 id="evidence-title">
+              원자료·저장값·화면값 대조
+            </h3>
+
+            <p>
+              응답의 원자료, 저장한 값과 계산 결과를 확인합니다.
+              화면값은 표시 자릿수에 맞춰 반올림될 수 있습니다.
+            </p>
+
+            <details>
+              <summary>
+                마지막 정상 응답과 계산 근거 보기
+              </summary>
+
+              <h4>원자료</h4>
+              <pre id="raw-response">정상 응답 없음</pre>
+
+              <h4>저장값</h4>
+              <pre id="stored-record">저장 기록 없음</pre>
+
+              <h4>화면 표시·어제 대비 계산</h4>
+              <pre id="calculation-evidence">비교 기록 없음</pre>
+            </details>
+          </section>
+
+          <!-- 실제 일별 기록 -->
+          <section
+            class="history-panel"
+            aria-labelledby="history-title"
+          >
+            <h3 id="history-title">실제 일별 기록</h3>
+
+            <p>
+              같은 KST 날짜의 정상 조회는 한 건으로 갱신합니다.
+              다음 날짜에는 새 기록을 추가하며,
+              실패한 조회는 기존 정상 기록을 덮어쓰지 않습니다.
+            </p>
+
+            <p
+              id="storage-status"
+              role="status"
+              aria-live="polite"
+            >
+              기록 저장 상태 확인 전
+            </p>
+
+            <div
+              class="table-scroll"
+              role="region"
+              aria-label="실제 일별 환율 기록 표"
+              tabindex="0"
+            >
+              <table>
+                <caption>
+                  KST 기록일별 환율과 원천 기준일
+                </caption>
+
+                <thead>
+                  <tr>
+                    <th scope="col">KST 기록일</th>
+                    <th scope="col">원천 기준일</th>
+                    <th scope="col">USD 1달러</th>
+                    <th scope="col">EUR 1유로</th>
+                    <th scope="col">JPY 100엔</th>
+                    <th scope="col">CNY 1위안</th>
+                    <th scope="col">GBP 1파운드</th>
+                    <th scope="col">정상 수신 시각</th>
+                  </tr>
+                </thead>
+
+                <tbody id="history-body">
+                  <tr>
+                    <td colspan="8">
+                      아직 실제 기록이 없습니다.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              실제 공개 원천의 정상 응답만 기록합니다.
+              합성 시험 데이터는 포함하지 않습니다.
+            </p>
+          </section>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           화면 2: 실패 대응 검사
+           ================================================== -->
+      <section
+        id="test-screen"
+        aria-labelledby="test-screen-title"
+        hidden
+      >
+        <h2 id="test-screen-title" tabindex="-1">
+          실패 대응 검사
+        </h2>
+
+        <section
+          class="test-panel"
+          aria-labelledby="test-title"
+        >
+          <h3 id="test-title">
+            합성 응답으로 데이터 처리 검사
+          </h3>
+
+          <p id="test-help">
+            실제 API 대신 합성 응답이나 오류를 넣어
+            실제 조회와 동일한 검증·상태 처리 과정을 검사합니다.
+            시험값과 시험 기록은 별도 메모리에서 관리하며
+            실제 환율 기록을 변경하지 않습니다.
+          </p>
+
+          <p>
+            정상 응답을 먼저 실행하고, 실패 시나리오를 실행한 뒤,
+            정상 복구를 실행해 상태 변화를 확인하세요.
+            페이지를 새로고침하면 시험 상태는 초기화됩니다.
+          </p>
+
+          <label for="test-scenario">시험 시나리오</label>
+
+          <select
+            id="test-scenario"
+            aria-describedby="test-help"
+          >
+            <option value="normal">정상 응답</option>
+            <option value="slow">느린 응답·시간 초과</option>
+            <option value="unauthorized">
+              외부 원천 401/403
+            </option>
+            <option value="rate-limit">호출 제한</option>
+            <option value="offline">오프라인·연결 실패</option>
+            <option value="schema">응답 형식 변경</option>
+            <option value="recover">실패 후 정상 복구</option>
+          </select>
+
+          <button id="run-test-button" type="button">
+            선택한 시나리오 실행
+          </button>
+
+          <button id="reset-test-button" type="button">
+            시험 상태 초기화
+          </button>
+
+          <dl class="test-stats">
+            <div>
+              <dt>시험 데이터 상태</dt>
+              <dd id="test-data-status">정상 시험값 없음</dd>
+            </div>
+
+            <div>
+              <dt>시험 오류 상태</dt>
+              <dd id="test-error-status">none</dd>
+            </div>
+
+            <div>
+              <dt>시험의 마지막 정상값</dt>
+              <dd id="test-last-value">—</dd>
+            </div>
+
+            <div>
+              <dt>시험 일별 기록 수</dt>
+              <dd id="test-record-count">0건</dd>
+            </div>
+          </dl>
+
+          <p
+            id="test-message"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            정상 응답을 먼저 실행해 주세요.
+          </p>
+
+          <p id="test-next-action"></p>
+
+          <!-- 자동 판정 결과 -->
+          <h4>이번 실행의 검사 결과</h4>
+
+          <p>
+            실패 시 값·기록 보존과 오류 안내를,
+            정상 응답 시 갱신과 오류 해제를 확인합니다.
+          </p>
+
+          <ul id="test-results">
+            <li>아직 실행한 검사가 없습니다.</li>
+          </ul>
+
+          <details>
+            <summary>시험 입력과 처리 전·후 상태 보기</summary>
+
+            <h4>합성 입력</h4>
+            <pre id="test-input">시험 입력 없음</pre>
+
+            <h4>처리 전 상태</h4>
+            <pre id="test-before">시험 실행 전</pre>
+
+            <h4>처리 후 상태</h4>
+            <pre id="test-after">시험 실행 전</pre>
+          </details>
+
+          <p>
+            합성 시험은 실제 공개 원천에서
+            서로 다른 KST 날짜에 수집한 기록 2건을
+            대신하지 않습니다.
+          </p>
+        </section>
+      </section>
+    </div>
+
+    <noscript>
+      <p>
+        환율 조회와 검사 기능을 사용하려면
+        JavaScript를 활성화해 주세요.
+      </p>
+    </noscript>
+  </main>
+</body>
+</html>

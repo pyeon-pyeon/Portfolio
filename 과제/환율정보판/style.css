@@ -1,0 +1,739 @@
+/* ============================================================
+   기본 설정
+   ============================================================ */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f3f6fb;
+  color: #23324a;
+  font-family: "Malgun Gothic", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+button,
+select {
+  font: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 12px;
+  color: #172743;
+  font-size: 32px;
+  line-height: 1.35;
+}
+
+h2 {
+  margin-bottom: 18px;
+  color: #172743;
+  font-size: 22px;
+}
+
+h3 {
+  margin-bottom: 12px;
+  color: #234f91;
+  font-size: 18px;
+}
+
+p {
+  margin-bottom: 14px;
+}
+
+a {
+  color: #234f91;
+  text-underline-offset: 4px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+a[aria-disabled="true"] {
+  color: #52617a;
+  text-decoration: none;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ============================================================
+   전체 배치
+   ============================================================ */
+.board-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+
+  width: min(calc(100% - 48px), 1200px);
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+.board-layout > * {
+  min-width: 0;
+}
+
+.board-header,
+.status-panel,
+.rates-panel,
+.history-panel,
+.test-panel,
+noscript {
+  grid-column: 1 / -1;
+}
+
+.board-header p {
+  max-width: 960px;
+  color: #52617a;
+}
+
+.board-header p:last-child {
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+/* 共通パネル */
+.status-panel,
+.rates-panel,
+.source-panel,
+.history-panel,
+.evidence-panel,
+.test-panel {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #c4cede;
+  border-radius: 10px;
+}
+
+.board-layout section > p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   状態・日時
+   ============================================================ */
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0 0 20px;
+}
+
+.status-grid > div,
+.test-stats > div {
+  min-width: 0;
+  padding: 14px;
+  background: #f3f6fb;
+  border: 1px solid #d2dbea;
+  border-radius: 6px;
+}
+
+dt {
+  margin-bottom: 6px;
+  color: #52617a;
+  font-size: 14px;
+}
+
+dd {
+  margin: 0;
+  color: #23324a;
+}
+
+#data-status,
+#request-status {
+  font-weight: 700;
+}
+
+#request-message {
+  margin-top: 18px;
+  font-weight: 700;
+}
+
+#next-action {
+  color: #52617a;
+}
+
+/* JS에서 상태에 맞춰 data-state 속성을 사용할 수 있음 */
+[data-state="fresh"] {
+  color: #17613d;
+}
+
+[data-state="stale"] {
+  color: #825000;
+}
+
+[data-state="error"] {
+  color: #a12636;
+}
+
+[data-state="loading"] {
+  color: #234f91;
+}
+
+/* ============================================================
+   환율 카드
+   ============================================================ */
+.rate-cards {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.rate-card {
+  min-width: 0;
+  padding: 18px 14px;
+  background: #f3f6fb;
+  border: 1px solid #c4cede;
+  border-radius: 8px;
+}
+
+.rate-card h3 {
+  margin-bottom: 8px;
+  font-size: 17px;
+}
+
+.rate-card > p {
+  margin-bottom: 10px;
+  color: #52617a;
+  font-size: 14px;
+}
+
+.rate-card .rate-value {
+  color: #172743;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+.rate-card > p:last-child {
+  margin-bottom: 0;
+}
+
+/* 상승·하락은 글자 설명과 함께 사용 */
+.change-up {
+  color: #a12636 !important;
+}
+
+.change-down {
+  color: #234f91 !important;
+}
+
+.change-flat {
+  color: #52617a !important;
+}
+
+#comparison-info {
+  color: #52617a;
+}
+
+/* ============================================================
+   출처
+   ============================================================ */
+.source-panel dl {
+  margin: 0 0 18px;
+}
+
+.source-panel dl > div {
+  margin-bottom: 18px;
+}
+
+.source-panel dl > div:last-child {
+  margin-bottom: 0;
+}
+
+.source-panel dd {
+  overflow-wrap: anywhere;
+}
+
+.source-panel > p:last-child {
+  color: #52617a;
+  font-size: 14px;
+}
+
+/* ============================================================
+   일별 기록 표
+   ============================================================ */
+#storage-status {
+  color: #234f91;
+  font-weight: 700;
+}
+
+.table-scroll {
+  max-width: 100%;
+  margin: 18px 0;
+  overflow-x: auto;
+  border: 1px solid #c4cede;
+  border-radius: 6px;
+}
+
+table {
+  width: 100%;
+  min-width: 960px;
+  border-collapse: collapse;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+caption {
+  padding: 14px;
+  color: #52617a;
+  text-align: left;
+  background: #f3f6fb;
+}
+
+th,
+td {
+  padding: 12px;
+  border-bottom: 1px solid #d2dbea;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: #e6edf8;
+  color: #172743;
+  font-weight: 700;
+}
+
+td {
+  color: #23324a;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ============================================================
+   원자료·계산 근거
+   ============================================================ */
+.evidence-panel > p {
+  color: #52617a;
+  font-size: 14px;
+}
+
+details {
+  min-width: 0;
+}
+
+summary {
+  padding: 10px 0;
+  color: #234f91;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+details h3 {
+  margin: 20px 0 10px;
+}
+
+pre {
+  max-width: 100%;
+  max-height: 320px;
+  margin: 0;
+  padding: 14px;
+  overflow: auto;
+
+  background: #101827;
+  color: #e8eef9;
+  border-radius: 6px;
+
+  font-family: Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* ============================================================
+   버튼·입력
+   ============================================================ */
+button {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 10px 16px;
+
+  background: #234f91;
+  color: #ffffff;
+  border: 1px solid #234f91;
+  border-radius: 5px;
+
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: #193c70;
+}
+
+button:active:not(:disabled) {
+  background: #122d56;
+}
+
+button:disabled {
+  background: #e6ebf3;
+  color: #52617a;
+  border-color: #b5c1d3;
+  cursor: not-allowed;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+select {
+  min-height: 44px;
+  max-width: 100%;
+  margin: 0 12px 12px 0;
+  padding: 10px 12px;
+
+  background: #ffffff;
+  color: #23324a;
+  border: 1px solid #71819b;
+  border-radius: 5px;
+}
+
+select:disabled {
+  background: #edf1f7;
+  color: #52617a;
+  cursor: not-allowed;
+}
+
+button:focus-visible,
+select:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+.table-scroll:focus-visible {
+  outline: 3px solid #234f91;
+  outline-offset: 4px;
+}
+
+/* ============================================================
+   합성 실패 검사
+   실제 데이터 영역과 시각적으로 구분
+   ============================================================ */
+.test-panel {
+  background: #f8faff;
+  border: 2px dashed #71819b;
+}
+
+#test-help {
+  color: #52617a;
+}
+
+.test-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0;
+}
+
+#test-message {
+  font-weight: 700;
+}
+
+#test-next-action {
+  color: #52617a;
+}
+
+/* ============================================================
+   본문 바로가기
+   ============================================================ */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 100;
+  padding: 10px 14px;
+  background: #ffffff;
+  color: #234f91;
+}
+
+.skip-link:focus {
+  top: 10px;
+}
+
+/* ============================================================
+   중간 화면
+   ============================================================ */
+@media (max-width: 1100px) {
+  .rate-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ============================================================
+   모바일
+   ============================================================ */
+@media (max-width: 760px) {
+  .board-layout {
+    grid-template-columns: minmax(0, 1fr);
+    width: calc(100% - 32px);
+    gap: 18px;
+    padding: 24px 0;
+  }
+
+  .board-layout > * {
+    grid-column: 1;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .status-panel,
+  .rates-panel,
+  .source-panel,
+  .history-panel,
+  .evidence-panel,
+  .test-panel {
+    padding: 18px;
+  }
+
+  .status-grid,
+  .test-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .rate-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .rate-card .rate-value {
+    font-size: 22px;
+  }
+
+  #test-scenario {
+    display: block;
+    width: 100%;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .status-grid,
+  .test-stats,
+  .rate-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ============================================================
+   움직임 줄이기
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* ============================================================
+   전체 화면 영역
+   ============================================================ */
+.board-shell {
+  width: min(calc(100% - 48px), 1200px);
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+/* 내부 배치는 기존 board-layout의 그리드를 사용 */
+.board-shell .board-layout {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* 숨긴 화면의 내용과 버튼은 표시하지 않음 */
+[hidden] {
+  display: none !important;
+}
+
+/* ============================================================
+   실제 환율 / 실패 대응 검사 전환
+   ============================================================ */
+.screen-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.screen-navigation button[aria-pressed="true"] {
+  background: #234f91;
+  color: #ffffff;
+  border-color: #234f91;
+}
+
+.screen-navigation button[aria-pressed="false"] {
+  background: #ffffff;
+  color: #234f91;
+  border-color: #234f91;
+}
+
+.screen-navigation button[aria-pressed="false"]:hover:not(:disabled) {
+  background: #e6edf8;
+}
+
+#real-screen-title,
+#test-screen-title {
+  margin-bottom: 20px;
+  scroll-margin-top: 20px;
+}
+
+#real-screen-title:focus-visible,
+#test-screen-title:focus-visible {
+  outline: 3px solid #234f91;
+  outline-offset: 4px;
+}
+
+/* ============================================================
+   수정된 제목 단계
+   h2: 화면 제목 / h3: 영역 제목 / h4: 세부 항목
+   ============================================================ */
+.status-panel > h3,
+.rates-panel > h3,
+.source-panel > h3,
+.history-panel > h3,
+.evidence-panel > h3,
+.test-panel > h3 {
+  margin: 0 0 18px;
+  color: #172743;
+  font-size: 22px;
+  line-height: 1.4;
+}
+
+h4 {
+  margin: 0 0 12px;
+  color: #234f91;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.rate-card h4 {
+  margin-bottom: 8px;
+  font-size: 17px;
+}
+
+details h4 {
+  margin: 20px 0 10px;
+}
+
+/* ============================================================
+   실패 검사 화면
+   ============================================================ */
+#test-screen .test-panel {
+  min-width: 0;
+}
+
+#test-screen .test-panel > h4 {
+  margin-top: 24px;
+}
+
+#test-scenario {
+  max-width: 100%;
+}
+
+#run-test-button,
+#reset-test-button {
+  margin-bottom: 12px;
+}
+
+#reset-test-button {
+  background: #ffffff;
+  color: #234f91;
+}
+
+#reset-test-button:hover:not(:disabled) {
+  background: #e6edf8;
+}
+
+#reset-test-button:disabled {
+  background: #e6ebf3;
+  color: #52617a;
+  border-color: #b5c1d3;
+}
+
+#test-record-count,
+#test-error-status,
+#test-data-status {
+  font-weight: 700;
+}
+
+/* 자동 검사 결과 */
+#test-results {
+  margin: 16px 0 24px;
+  padding: 16px 16px 16px 38px;
+  background: #ffffff;
+  border: 1px solid #c4cede;
+  border-radius: 6px;
+}
+
+#test-results li {
+  margin-bottom: 8px;
+}
+
+#test-results li:last-child {
+  margin-bottom: 0;
+}
+
+/* 처리 전후 JSON은 영역 안에서 스크롤 */
+#test-input,
+#test-before,
+#test-after {
+  max-height: 320px;
+  overflow: auto;
+}
+
+/* ============================================================
+   모바일
+   ============================================================ */
+@media (max-width: 760px) {
+  .board-shell {
+    width: calc(100% - 32px);
+    padding: 24px 0;
+  }
+
+  .board-shell .board-layout {
+    width: 100%;
+    padding: 0;
+  }
+
+  .screen-navigation {
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  .screen-navigation button {
+    flex: 1 1 140px;
+  }
+
+  #test-scenario {
+    display: block;
+    width: 100%;
+    margin-right: 0;
+  }
+}
