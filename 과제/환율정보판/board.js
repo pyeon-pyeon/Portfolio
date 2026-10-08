@@ -9,7 +9,11 @@
   const TIMEOUT_MS = 10000;
   const SERVER_TIMEOUT_MS = 25000;
 
-  const CURRENCIES = ["USD", "EUR", "JPY", "CNY", "GBP"];
+  const CURRENCIES = ["USD", "EUR", "JPY", "CNY", "GBP", "AUD"];
+
+  // AUD 추가 이전에 저장된 과거 행에는 이 통화의 값이 없습니다.
+  // 서버에서 받은 일별 기록을 읽을 때만 "전부 없음"을 허용합니다.
+  const LEGACY_OPTIONAL = ["AUD"];
 
   const UNITS = {
     USD: 1,
@@ -17,6 +21,7 @@
     JPY: 100,
     CNY: 1,
     GBP: 1,
+    AUD: 1,
   };
 
   const $ = (id) => document.getElementById(id);
@@ -243,7 +248,22 @@
   // ============================================================
   // 기록 검증・날짜별 병합
   // ============================================================
-  function isValidRecord(record) {
+  function isMissing(value) {
+    return value === undefined || value === null;
+  }
+
+  function hasRate(record, currency) {
+    return (
+      Boolean(record) &&
+      Boolean(record.rates) &&
+      !isMissing(record.rates[currency])
+    );
+  }
+
+  // allowLegacy: LEGACY_OPTIONAL 통화의 원자료·환율·기준일이
+  // "셋 다 없는" 과거 행만 허용합니다. 일부만 있거나 값이
+  // 문자열·0·음수이면 누락이 아니라 손상이므로 거부합니다.
+  function isValidRecord(record, { allowLegacy = false } = {}) {
     if (
       !record ||
       record.source !== SOURCE_URL ||
@@ -259,6 +279,16 @@
 
     return CURRENCIES.every((currency) => {
       const raw = record.raw[currency];
+
+      if (
+        allowLegacy &&
+        LEGACY_OPTIONAL.includes(currency) &&
+        isMissing(raw) &&
+        isMissing(record.rates[currency]) &&
+        isMissing(record.sourceDates[currency])
+      ) {
+        return true;
+      }
 
       return (
         raw &&
@@ -413,7 +443,9 @@
       body.timeZone !== "Asia/Seoul" ||
       !Array.isArray(body.records) ||
       body.records.length > 366 ||
-      !body.records.every(isValidRecord) ||
+      !body.records.every((record) =>
+        isValidRecord(record, { allowLegacy: true })
+      ) ||
       new Set(
         body.records.map((record) => record.kstDate)
       ).size !== body.records.length
@@ -439,6 +471,30 @@
     realState.records = records;
 
     return records;
+  }
+
+  // ============================================================
+  // 원천 기준일 표시: 값이 있는 통화만 사용
+  // ============================================================
+  function sourceDateText(record) {
+    const present = CURRENCIES.filter(
+      (currency) => !isMissing(record.sourceDates[currency])
+    );
+
+    const dates = [
+      ...new Set(
+        present.map((currency) => record.sourceDates[currency])
+      ),
+    ];
+
+    return dates.length === 1
+      ? dates[0]
+      : present
+          .map(
+            (currency) =>
+              `${currency}: ${record.sourceDates[currency]}`
+          )
+          .join(" / ");
   }
 
   // ============================================================
@@ -483,22 +539,17 @@
     $("storage-status").textContent = state.storageMessage;
 
     if (record) {
-      const dates = [
-        ...new Set(Object.values(record.sourceDates)),
-      ];
-
-      $("source-time").textContent = dates.length === 1
-        ? `${dates[0]} · 시각 미제공`
-        : CURRENCIES.map((currency) =>
-            `${currency}: ${record.sourceDates[currency]}`
-          ).join(" / ") + " · 시각 미제공";
+      $("source-time").textContent =
+        `${sourceDateText(record)} · 시각 미제공`;
 
       $("received-time").textContent =
         formatTime(record.receivedAt);
 
       CURRENCIES.forEach((currency) => {
         $(`${currency.toLowerCase()}-rate`).textContent =
-          formatNumber(record.rates[currency]);
+          hasRate(record, currency)
+            ? formatNumber(record.rates[currency])
+            : "—";
       });
 
       $("raw-response").textContent =
@@ -527,17 +578,79 @@
     renderHistory();
   }
 
-  function renderComparison() {
-    const today = kstDate();
+  // ============================================================
+  // 어제 대비 계산 (실제 화면과 합성 검사가 함께 사용)
+  // 어느 한쪽 기록에 값이 없는 통화는 비교하지 않고 사유를 남김
+  // ============================================================
+  const FORMULA = "(오늘값 - 어제값) / 어제값 × 100";
+
+  function buildComparison(records, today) {
     const yesterday = previousDate(today);
 
-    const todayRecord = realState.records.find(
+    const todayRecord = records.find(
       (record) => record.kstDate === today
     );
 
-    const yesterdayRecord = realState.records.find(
+    const yesterdayRecord = records.find(
       (record) => record.kstDate === yesterday
     );
+
+    const result = {
+      today,
+      yesterday,
+      available: Boolean(todayRecord && yesterdayRecord),
+      currencies: {},
+    };
+
+    if (!result.available) {
+      return result;
+    }
+
+    CURRENCIES.forEach((currency) => {
+      const current = todayRecord.rates[currency];
+      const previous = yesterdayRecord.rates[currency];
+
+      if (isMissing(current) || isMissing(previous)) {
+        result.currencies[currency] = {
+          comparable: false,
+          reason: isMissing(previous)
+            ? `${yesterday} 기록에 ${currency} 값이 없음`
+            : `${today} 기록에 ${currency} 값이 없음`,
+        };
+        return;
+      }
+
+      const difference = current - previous;
+
+      result.currencies[currency] = {
+        comparable: true,
+        today: current,
+        yesterday: previous,
+        difference,
+        percent: difference / previous * 100,
+        formula: FORMULA,
+      };
+    });
+
+    return result;
+  }
+
+  function changeText(item) {
+    const direction = item.difference > 0
+      ? "상승"
+      : item.difference < 0
+        ? "하락"
+        : "변동 없음";
+
+    return (
+      `${direction} ${formatNumber(Math.abs(item.difference))}원 ` +
+      `(${formatNumber(Math.abs(item.percent))}%)`
+    );
+  }
+
+  function renderComparison() {
+    const today = kstDate();
+    const comparison = buildComparison(realState.records, today);
 
     CURRENCIES.forEach((currency) => {
       const element = $(`${currency.toLowerCase()}-change`);
@@ -551,9 +664,9 @@
       element.textContent = "비교 기록 없음";
     });
 
-    if (!todayRecord || !yesterdayRecord) {
+    if (!comparison.available) {
       $("comparison-info").textContent =
-        `${today} 또는 ${yesterday}의 저장 기록이 없어 ` +
+        `${today} 또는 ${comparison.yesterday}의 저장 기록이 없어 ` +
         "어제 대비를 계산하지 않습니다.";
 
       $("calculation-evidence").textContent =
@@ -562,53 +675,38 @@
       return;
     }
 
-    const evidence = {
-      today,
-      yesterday,
-      currencies: {},
-    };
+    let skipped = false;
 
     CURRENCIES.forEach((currency) => {
-      const current = todayRecord.rates[currency];
-      const previous = yesterdayRecord.rates[currency];
-      const difference = current - previous;
-      const percent = difference / previous * 100;
-
+      const item = comparison.currencies[currency];
       const element = $(`${currency.toLowerCase()}-change`);
 
-      const direction = difference > 0
-        ? "상승"
-        : difference < 0
-          ? "하락"
-          : "변동 없음";
+      if (!item.comparable) {
+        skipped = true;
+        element.textContent = `비교 불가 · ${item.reason}`;
+        return;
+      }
 
-      element.textContent =
-        `${direction} ${formatNumber(Math.abs(difference))}원 ` +
-        `(${formatNumber(Math.abs(percent))}%)`;
+      element.textContent = changeText(item);
 
       element.classList.add(
-        difference > 0
+        item.difference > 0
           ? "change-up"
-          : difference < 0
+          : item.difference < 0
             ? "change-down"
             : "change-flat"
       );
-
-      evidence.currencies[currency] = {
-        today: current,
-        yesterday: previous,
-        difference,
-        percent,
-        formula: "(오늘값 - 어제값) / 어제값 × 100",
-      };
     });
 
     $("comparison-info").textContent =
-      `${today}와 ${yesterday}의 실제 저장값을 비교합니다. ` +
-      "원천 기준일이 같으면 변동이 없을 수 있습니다.";
+      `${today}와 ${comparison.yesterday}의 실제 저장값을 비교합니다. ` +
+      "원천 기준일이 같으면 변동이 없을 수 있습니다." +
+      (skipped
+        ? " 과거 기록에 값이 없는 통화는 값을 만들어 채우지 않고 비교하지 않습니다."
+        : "");
 
     $("calculation-evidence").textContent =
-      JSON.stringify(evidence, null, 2);
+      JSON.stringify(comparison, null, 2);
   }
 
   function renderHistory() {
@@ -619,7 +717,7 @@
       const row = document.createElement("tr");
       const cell = document.createElement("td");
 
-      cell.colSpan = 8;
+      cell.colSpan = 9;
       cell.textContent = "아직 실제 기록이 없습니다.";
 
       row.append(cell);
@@ -630,21 +728,13 @@
     [...realState.records].reverse().forEach((record) => {
       const row = document.createElement("tr");
 
-      const dates = [
-        ...new Set(Object.values(record.sourceDates)),
-      ];
-
-      const sourceDates = dates.length === 1
-        ? dates[0]
-        : CURRENCIES.map((currency) =>
-            `${currency}: ${record.sourceDates[currency]}`
-          ).join(" / ");
-
       const values = [
         record.kstDate,
-        sourceDates,
+        sourceDateText(record),
         ...CURRENCIES.map((currency) =>
-          formatNumber(record.rates[currency])
+          hasRate(record, currency)
+            ? formatNumber(record.rates[currency])
+            : "기록 없음"
         ),
         formatTime(record.receivedAt),
       ];
@@ -731,7 +821,7 @@
         "공개 DB에 저장했습니다. 다른 브라우저에서도 조회할 수 있습니다.";
 
       realState.message =
-        "다섯 통화의 정상 환율을 조회하고 저장했습니다.";
+        "여섯 통화의 정상 환율을 조회하고 저장했습니다.";
 
       realState.nextAction =
         "다른 실제 KST 날짜에 다시 조회해 두 번째 기록을 남기세요.";
@@ -994,6 +1084,7 @@
         JPY: 9.5,
         CNY: 195,
         GBP: 1800,
+        AUD: 900,
       };
 
       const recovered = scenario === "recover";
@@ -1007,8 +1098,32 @@
           : rates[currency],
       };
 
+      // 두 날짜의 AUD를 900 → 910으로 고정해 비교값을 검산 가능하게 함
+      if (currency === "AUD" && recovered) {
+        raw.rate = 910;
+      }
+
       if (scenario === "schema" && currency === "USD") {
         raw.rate = "not-a-number";
+      }
+
+      // AUD 손상 응답: 다른 5개 통화는 정상, AUD만 손상
+      if (currency === "AUD") {
+        if (scenario === "aud-string") {
+          raw.rate = "900";
+        }
+
+        if (scenario === "aud-zero") {
+          raw.rate = 0;
+        }
+
+        if (scenario === "aud-negative") {
+          raw.rate = -900;
+        }
+
+        if (scenario === "aud-missing") {
+          delete raw.rate;
+        }
       }
 
       return new Response(JSON.stringify(raw), {
@@ -1018,6 +1133,58 @@
         },
       });
     };
+  }
+
+  // 실패 시나리오 → 화면에 표시되어야 하는 오류 코드
+  const SCENARIO_ERROR = {
+    slow: "slow",
+    unauthorized: "unauthorized",
+    "rate-limit": "rate-limit",
+    offline: "offline",
+    schema: "schema",
+    "aud-string": "schema",
+    "aud-zero": "schema",
+    "aud-negative": "schema",
+    "aud-missing": "schema",
+  };
+
+  // 합성 기록만으로 계산한 어제 대비 (실제 기록·DB와 무관)
+  function renderTestComparison() {
+    const latest = testState.records.at(-1);
+
+    if (!latest) {
+      $("test-comparison").textContent = "합성 기록 없음";
+      return null;
+    }
+
+    const comparison = buildComparison(
+      testState.records,
+      latest.kstDate
+    );
+
+    if (!comparison.available) {
+      $("test-comparison").textContent =
+        `${comparison.yesterday}의 합성 기록이 없어 비교하지 않습니다. ` +
+        "정상 응답 → 정상 복구 순서로 실행하세요.";
+      return null;
+    }
+
+    const signed = (value) =>
+      (value > 0 ? "+" : value < 0 ? "-" : "") +
+      formatNumber(Math.abs(value));
+
+    const aud = comparison.currencies.AUD;
+
+    $("test-comparison").textContent =
+      (aud?.comparable
+        ? `AUD ${formatNumber(aud.yesterday)} → ` +
+          `${formatNumber(aud.today)}: ` +
+          `차이 ${signed(aud.difference)}원 · ` +
+          `변화율 ${signed(aud.percent)}%\n\n`
+        : "AUD: 비교 불가\n\n") +
+      JSON.stringify(comparison, null, 2);
+
+    return comparison;
   }
 
   function renderTest() {
@@ -1070,19 +1237,15 @@
 
     const scenario = scenarioSelect.value;
 
-    const allowedScenarios = [
-      "normal",
-      "slow",
-      "unauthorized",
-      "rate-limit",
-      "offline",
-      "schema",
-      "recover",
-    ];
-
-    if (!allowedScenarios.includes(scenario)) {
+    if (
+      scenario !== "normal" &&
+      scenario !== "recover" &&
+      !Object.hasOwn(SCENARIO_ERROR, scenario)
+    ) {
       return;
     }
+
+    const expectedCode = SCENARIO_ERROR[scenario];
 
     const before = clone(testState);
     const realBefore = JSON.stringify(realState);
@@ -1159,6 +1322,14 @@
               ) < 0.000001,
           },
           {
+            label: "AUD 정상 반영 (1 AUD당 900원, 복구 시 910원)",
+            passed:
+              after.lastNormal?.rates.AUD ===
+                (scenario === "recover" ? 910 : 900) &&
+              after.lastNormal.raw.AUD.base === "AUD" &&
+              after.lastNormal.raw.AUD.quote === "KRW",
+          },
+          {
             label: "같은 날짜 병합・다음 날짜 추가",
             passed:
               after.records.length === expectedCount &&
@@ -1171,7 +1342,7 @@
         const expectedAction =
           scenario === "rate-limit"
             ? "60초 뒤 다시 시도하세요."
-            : ERROR_INFO[scenario].action;
+            : ERROR_INFO[expectedCode].action;
 
         checks.push(
           {
@@ -1189,7 +1360,7 @@
           {
             label: "실패 종류와 데이터 상태 표시",
             passed:
-              after.error === scenario &&
+              after.error === expectedCode &&
               after.requestStatus === "error" &&
               after.dataStatus ===
                 (before.lastNormal ? "stale" : "none"),
@@ -1198,11 +1369,25 @@
             label: "실패 원인과 다음 행동 안내",
             passed:
               after.message.startsWith(
-                ERROR_INFO[scenario].message
+                ERROR_INFO[expectedCode].message
               ) &&
               after.nextAction === expectedAction,
           }
         );
+      }
+
+      const comparison = renderTestComparison();
+
+      if (scenario === "recover" && comparison) {
+        const aud = comparison.currencies.AUD;
+
+        checks.push({
+          label: "합성 AUD 900→910 비교: 차이 +10원, 변화율 +1.11%",
+          passed:
+            aud.comparable &&
+            aud.difference === 10 &&
+            aud.percent.toFixed(2) === "1.11",
+        });
       }
 
       checks.push({
@@ -1247,6 +1432,7 @@
     $("test-input").textContent = "시험 입력 없음";
     $("test-before").textContent = "시험 실행 전";
     $("test-after").textContent = "시험 실행 전";
+    $("test-comparison").textContent = "시험 실행 전";
 
     $("test-results").replaceChildren();
 

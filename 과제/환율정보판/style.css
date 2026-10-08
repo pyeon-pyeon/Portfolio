@@ -188,7 +188,7 @@ dd {
    ============================================================ */
 .rate-cards {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   margin: 20px 0;
 }
@@ -283,7 +283,7 @@ dd {
 
 table {
   width: 100%;
-  min-width: 960px;
+  min-width: 1080px;
   border-collapse: collapse;
   font-size: 14px;
   font-variant-numeric: tabular-nums;

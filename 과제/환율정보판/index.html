@@ -6,10 +6,10 @@
 
   <meta
     name="description"
-    content="주요 5개 통화 환율을 기록하고 조회 실패 대응을 검사하는 정보판"
+    content="주요 6개 통화 환율을 기록하고 조회 실패 대응을 검사하는 정보판"
   >
 
-  <title>주요 5개 통화 환율 기록판</title>
+  <title>주요 6개 통화 환율 기록판</title>
 
   <link rel="stylesheet" href="style.css">
   <script src="board.js" defer></script>
@@ -20,7 +20,7 @@
 
   <main class="board-shell">
     <header class="board-header">
-      <h1>주요 5개 통화 환율 기록판</h1>
+      <h1>주요 6개 통화 환율 기록판</h1>
       <p>
         공개 원천의 환율을 KST 날짜별로 기록하고
         어제 저장한 값과 비교합니다.
@@ -194,6 +194,18 @@
                 </p>
                 <p id="gbp-change">비교 기록 없음</p>
               </article>
+
+              <article
+                class="rate-card"
+                aria-labelledby="aud-title"
+              >
+                <h4 id="aud-title">호주 달러 · AUD</h4>
+                <p>1 AUD당 원화</p>
+                <p class="rate-value">
+                  <span id="aud-rate">—</span> 원
+                </p>
+                <p id="aud-change">비교 기록 없음</p>
+              </article>
             </div>
 
             <p>
@@ -315,13 +327,14 @@
                     <th scope="col">JPY 100엔</th>
                     <th scope="col">CNY 1위안</th>
                     <th scope="col">GBP 1파운드</th>
+                    <th scope="col">AUD 1호주달러</th>
                     <th scope="col">정상 수신 시각</th>
                   </tr>
                 </thead>
 
                 <tbody id="history-body">
                   <tr>
-                    <td colspan="8">
+                    <td colspan="9">
                       아직 실제 기록이 없습니다.
                     </td>
                   </tr>
@@ -367,6 +380,8 @@
           <p>
             정상 응답을 먼저 실행하고, 실패 시나리오를 실행한 뒤,
             정상 복구를 실행해 상태 변화를 확인하세요.
+            정상 응답 다음에 정상 복구를 실행하면 두 합성 날짜의
+            AUD 값(900원, 910원)으로 어제 대비를 계산합니다.
             페이지를 새로고침하면 시험 상태는 초기화됩니다.
           </p>
 
@@ -384,6 +399,10 @@
             <option value="rate-limit">호출 제한</option>
             <option value="offline">오프라인·연결 실패</option>
             <option value="schema">응답 형식 변경</option>
+            <option value="aud-string">AUD 값이 문자열</option>
+            <option value="aud-zero">AUD 값이 0</option>
+            <option value="aud-negative">AUD 값이 음수</option>
+            <option value="aud-missing">AUD 값 누락</option>
             <option value="recover">실패 후 정상 복구</option>
           </select>
 
@@ -451,6 +470,9 @@
 
             <h4>처리 후 상태</h4>
             <pre id="test-after">시험 실행 전</pre>
+
+            <h4>합성 기록의 어제 대비 계산 (AUD 포함)</h4>
+            <pre id="test-comparison">시험 실행 전</pre>
           </details>
 
           <p>

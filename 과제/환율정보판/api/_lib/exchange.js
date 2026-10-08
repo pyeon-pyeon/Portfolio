@@ -7,7 +7,12 @@ const API_BASE = "https://api.frankfurter.dev/v2";
 const SOURCE_URL = "https://frankfurter.dev/";
 const TABLE = "exchange_daily_records";
 
-const CURRENCIES = ["USD", "EUR", "JPY", "CNY", "GBP"];
+const CURRENCIES = ["USD", "EUR", "JPY", "CNY", "GBP", "AUD"];
+
+// AUD 추가 이전에 저장된 과거 행에는 이 통화의 값이 없습니다.
+// 읽을 때만 "전부 없음"을 허용하고, 새로 조회·저장하는 기록은
+// 반드시 모든 통화가 있어야 합니다.
+const LEGACY_OPTIONAL = ["AUD"];
 
 const UNITS = {
   USD: 1,
@@ -15,6 +20,7 @@ const UNITS = {
   JPY: 100,
   CNY: 1,
   GBP: 1,
+  AUD: 1,
 };
 
 const COLUMNS = [
@@ -27,6 +33,7 @@ const COLUMNS = [
   "jpy_100_krw",
   "cny_krw",
   "gbp_krw",
+  "aud_krw",
   "raw_response",
   "updated_at",
 ].join(",");
@@ -121,7 +128,7 @@ function retryAfterSeconds(value) {
 
 // ============================================================
 // 실제 환율 조회
-// 다섯 통화가 모두 정상일 때만 기록 반환
+// 여섯 통화가 모두 정상일 때만 기록 반환
 // ============================================================
 async function collectRates() {
   const controller = new AbortController();
@@ -230,7 +237,14 @@ async function collectRates() {
   }
 }
 
-function validateRecord(record) {
+function isMissing(value) {
+  return value === undefined || value === null;
+}
+
+// allowLegacy가 true이면 LEGACY_OPTIONAL 통화의 원자료·환율·기준일이
+// "셋 다 없는" 경우에만 건너뜁니다. 일부만 있거나 값이 잘못된 경우는
+// 누락이 아니라 손상이므로 그대로 거부합니다.
+function validateRecord(record, { allowLegacy = false } = {}) {
   if (
     !record ||
     record.source !== SOURCE_URL ||
@@ -249,6 +263,16 @@ function validateRecord(record) {
   }
 
   for (const currency of CURRENCIES) {
+    if (
+      allowLegacy &&
+      LEGACY_OPTIONAL.includes(currency) &&
+      isMissing(record.raw[currency]) &&
+      isMissing(record.rates[currency]) &&
+      isMissing(record.sourceDates[currency])
+    ) {
+      continue;
+    }
+
     const raw = validateRate(
       record.raw[currency],
       currency,
@@ -387,28 +411,38 @@ function toDatabaseRow(record) {
     jpy_100_krw: record.rates.JPY,
     cny_krw: record.rates.CNY,
     gbp_krw: record.rates.GBP,
+    aud_krw: record.rates.AUD,
     raw_response: record.raw,
     updated_at: new Date().toISOString(),
   };
 }
 
 function fromDatabaseRow(row) {
+  const rates = {
+    USD: Number(row.usd_krw),
+    EUR: Number(row.eur_krw),
+    JPY: Number(row.jpy_100_krw),
+    CNY: Number(row.cny_krw),
+    GBP: Number(row.gbp_krw),
+  };
+
+  // 과거 행의 aud_krw는 NULL입니다. Number(null)은 0이 되므로
+  // NULL일 때는 키 자체를 만들지 않습니다(값을 만들어 채우지 않음).
+  // NULL이 아닌 값은 그대로 변환해 손상값이 검증에서 걸러지게 합니다.
+  if (!isMissing(row.aud_krw)) {
+    rates.AUD = Number(row.aud_krw);
+  }
+
   const record = {
     kstDate: row.record_date,
     receivedAt: row.received_at,
     source: row.source_url,
     sourceDates: row.source_dates,
-    rates: {
-      USD: Number(row.usd_krw),
-      EUR: Number(row.eur_krw),
-      JPY: Number(row.jpy_100_krw),
-      CNY: Number(row.cny_krw),
-      GBP: Number(row.gbp_krw),
-    },
+    rates,
     raw: row.raw_response,
   };
 
-  validateRecord(record);
+  validateRecord(record, { allowLegacy: true });
   return record;
 }
 
@@ -493,4 +527,12 @@ module.exports = {
   saveDailyRecord,
   getDailyRecords,
   publicError,
+  // 검사용 내부 함수 (API 파일에서는 사용하지 않음)
+  _testing: {
+    CURRENCIES,
+    UNITS,
+    validateRecord,
+    toDatabaseRow,
+    fromDatabaseRow,
+  },
 };
