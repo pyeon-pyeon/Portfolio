@@ -1325,3 +1325,771 @@ summary {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+
+/* ========================================
+   공통: 숨김 · 키보드 초점
+======================================== */
+
+[hidden] {
+  display: none !important;
+}
+
+:root {
+  --pds-text: #172033;
+  --pds-muted: #526078;
+  --pds-primary: #2454b8;
+  --pds-primary-hover: #193e8c;
+  --pds-border: #d5dce7;
+  --pds-surface: #ffffff;
+  --pds-background: #f4f6fa;
+  --pds-danger: #a52424;
+}
+
+body {
+  color: var(--pds-text);
+  background: var(--pds-background);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--pds-primary);
+  outline-offset: 3px;
+}
+
+:where(h1, h2, h3, h4, li)[tabindex="-1"] {
+  scroll-margin-top: 24px;
+}
+
+.is-error {
+  color: var(--pds-danger);
+}
+
+.skip {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #ffffff;
+  background: var(--pds-primary);
+  transform: translateY(-180%);
+}
+
+.skip:focus {
+  transform: translateY(0);
+}
+
+/* ========================================
+   로그인 확인 화면
+======================================== */
+
+#auth-gate {
+  max-width: 640px;
+  margin: 72px auto;
+  padding: 32px;
+  border: 1px solid var(--pds-border);
+  border-radius: 16px;
+  background: var(--pds-surface);
+}
+
+#auth-gate h1 {
+  margin: 0 0 16px;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+#auth-gate-message {
+  color: var(--pds-muted);
+  line-height: 1.7;
+}
+
+#auth-gate a {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--pds-primary);
+  font-weight: 700;
+  text-underline-offset: 4px;
+}
+
+/* ========================================
+   로그인 · 가입 화면
+======================================== */
+
+.auth-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 460px);
+  gap: 40px;
+  align-items: start;
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+.auth-layout > * {
+  min-width: 0;
+}
+
+.auth-intro h1 {
+  margin-top: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.3;
+}
+
+.auth-intro p,
+.auth-intro li {
+  color: var(--pds-muted);
+  line-height: 1.8;
+}
+
+.auth-panel {
+  padding: 28px;
+  border: 1px solid var(--pds-border);
+  border-radius: 16px;
+  background: var(--pds-surface);
+  box-shadow: 0 8px 24px rgb(23 32 51 / 5%);
+}
+
+.auth-tabs,
+.auth-navigation {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+#show-login-button,
+#show-signup-button {
+  flex: 1;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--pds-border);
+  border-radius: 8px;
+  color: var(--pds-text);
+  background: #ffffff;
+  font-weight: 700;
+}
+
+#show-login-button[aria-pressed="true"],
+#show-signup-button[aria-pressed="true"] {
+  border-color: var(--pds-primary);
+  color: #ffffff;
+  background: var(--pds-primary);
+}
+
+#login-form fieldset,
+#signup-form fieldset {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+#login-form label,
+#signup-form label {
+  font-weight: 700;
+}
+
+#login-form input,
+#signup-form input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #8996aa;
+  border-radius: 8px;
+  color: var(--pds-text);
+  background: #ffffff;
+}
+
+#login-submit-button,
+#signup-submit-button {
+  min-height: 44px;
+  margin-top: 8px;
+  padding: 12px 16px;
+  border: 1px solid var(--pds-primary);
+  border-radius: 8px;
+  color: #ffffff;
+  background: var(--pds-primary);
+  font-weight: 700;
+}
+
+#login-submit-button:hover:not(:disabled),
+#signup-submit-button:hover:not(:disabled) {
+  background: var(--pds-primary-hover);
+}
+
+#auth-status,
+#login-message,
+#signup-message {
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+}
+
+#auth-status {
+  color: var(--pds-muted);
+}
+
+.auth-panel .help,
+.auth-panel .note,
+.auth-panel small {
+  color: var(--pds-muted);
+  line-height: 1.6;
+}
+
+/* ========================================
+   다이어리 상단 메뉴
+======================================== */
+
+#diary-app header .nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.diary-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.diary-navigation button {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--pds-border);
+  border-radius: 8px;
+  color: var(--pds-text);
+  background: #ffffff;
+  font-weight: 700;
+}
+
+.diary-navigation button:hover {
+  border-color: var(--pds-primary);
+  color: var(--pds-primary);
+  background: #edf3ff;
+}
+
+.diary-navigation button[aria-pressed="true"] {
+  border-color: var(--pds-primary);
+  color: #ffffff;
+  background: var(--pds-primary);
+}
+
+.account-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+#account-name {
+  color: var(--pds-text);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+#logout-button {
+  min-height: 44px;
+  padding: 9px 14px;
+  border: 1px solid #8996aa;
+  border-radius: 8px;
+  color: var(--pds-text);
+  background: #ffffff;
+}
+
+#logout-button:hover:not(:disabled) {
+  background: #edf0f5;
+}
+
+/* ========================================
+   다이어리 화면 배치
+======================================== */
+
+.diary-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.plan-sidebar {
+  position: static;
+  min-width: 0;
+  max-height: none;
+  overflow: visible;
+}
+
+.diary-content {
+  min-width: 0;
+}
+
+.diary-content > [data-diary-screen] {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.diary-content .panel,
+.diary-content .summary-panel {
+  padding: 24px;
+  border: 1px solid var(--pds-border);
+  border-radius: 14px;
+  background: var(--pds-surface);
+}
+
+.diary-content h2 {
+  margin-top: 0;
+}
+
+.diary-content h3 {
+  margin-top: 28px;
+}
+
+.diary-content form {
+  min-width: 0;
+}
+
+.diary-content fieldset {
+  min-width: 0;
+}
+
+.diary-content input,
+.diary-content select,
+.diary-content textarea {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.diary-content textarea {
+  resize: vertical;
+}
+
+.diary-content button {
+  min-height: 44px;
+}
+
+#connection-status,
+#plan-message,
+#task-message,
+#log-message,
+#review-message,
+#export-message {
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+}
+
+/* ========================================
+   計画一覧
+======================================== */
+
+#plan-list,
+#task-list,
+#log-list,
+#evidence-list,
+#plan-history-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#plan-list {
+  display: grid;
+  gap: 10px;
+}
+
+.plan-select {
+  display: grid;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 14px;
+  border: 1px solid var(--pds-border);
+  border-radius: 10px;
+  color: var(--pds-text);
+  background: #ffffff;
+  text-align: left;
+}
+
+.plan-select strong,
+.plan-select span {
+  overflow-wrap: anywhere;
+}
+
+.plan-select span {
+  color: var(--pds-muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.plan-select:hover:not(:disabled) {
+  border-color: var(--pds-primary);
+  background: #f4f7ff;
+}
+
+.plan-select.is-selected {
+  border-color: var(--pds-primary);
+  background: #edf3ff;
+  box-shadow: inset 3px 0 0 var(--pds-primary);
+}
+
+/* ========================================
+   할 일 · 실행 기록
+======================================== */
+
+#task-list,
+#log-list {
+  display: grid;
+  gap: 14px;
+}
+
+.task-item,
+.log-item {
+  padding: 18px;
+  border: 1px solid var(--pds-border);
+  border-radius: 10px;
+  background: #ffffff;
+  overflow-wrap: anywhere;
+}
+
+.task-item h4,
+.log-item h4 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.task-item p,
+.log-item p {
+  margin: 8px 0;
+  line-height: 1.7;
+}
+
+.task-meta,
+.log-meta,
+.task-tags {
+  color: var(--pds-muted);
+  font-size: 0.9rem;
+}
+
+.log-note,
+.log-blocked {
+  white-space: pre-wrap;
+}
+
+.log-blocked {
+  padding: 10px 12px;
+  border-left: 3px solid #916000;
+  border-radius: 4px;
+  color: #624300;
+  background: #fff6dc;
+}
+
+.task-actions,
+.log-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.task-actions button,
+.log-actions button {
+  padding: 8px 12px;
+  border: 1px solid #8996aa;
+  border-radius: 7px;
+  color: var(--pds-text);
+  background: #ffffff;
+}
+
+.task-actions button:hover:not(:disabled),
+.log-actions button:hover:not(:disabled) {
+  background: #edf3ff;
+}
+
+.task-actions .danger,
+.log-actions .danger {
+  border-color: var(--pds-danger);
+  color: var(--pds-danger);
+}
+
+.task-actions .danger:hover:not(:disabled),
+.log-actions .danger:hover:not(:disabled) {
+  background: #fff0f0;
+}
+
+#log-duration-preview {
+  padding: 12px;
+  border-radius: 8px;
+  color: var(--pds-text);
+  background: #edf3ff;
+  line-height: 1.6;
+}
+
+/* ========================================
+   요약 집계 · 근거 목록
+======================================== */
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.summary-cards > * {
+  min-width: 0;
+}
+
+.summary-cards button {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 104px;
+  padding: 16px;
+  border: 1px solid var(--pds-border);
+  border-radius: 10px;
+  color: var(--pds-text);
+  background: #ffffff;
+  text-align: left;
+}
+
+.summary-cards button:hover:not(:disabled) {
+  border-color: var(--pds-primary);
+  background: #f4f7ff;
+}
+
+.summary-cards strong {
+  display: block;
+  margin-top: 10px;
+  color: var(--pds-primary);
+  font-size: 1.5rem;
+  overflow-wrap: anywhere;
+}
+
+#summary-evidence {
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px solid var(--pds-border);
+  border-radius: 10px;
+  background: #f8faff;
+}
+
+#evidence-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+#evidence-list button {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--pds-border);
+  border-radius: 8px;
+  color: var(--pds-text);
+  background: #ffffff;
+  text-align: left;
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+}
+
+#evidence-list button:hover:not(:disabled) {
+  border-color: var(--pds-primary);
+  background: #edf3ff;
+}
+
+/* ========================================
+   돌아보기 표 · 변경 기록
+======================================== */
+
+.table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+#comparison-body button {
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 4px;
+  color: var(--pds-primary);
+  background: transparent;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+#plan-history-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+#plan-history-list details {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--pds-border);
+  border-radius: 8px;
+  background: #f8faff;
+}
+
+#plan-history-list summary {
+  cursor: pointer;
+  color: var(--pds-text);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+#plan-history-list pre {
+  max-width: 100%;
+  margin-bottom: 0;
+  padding: 14px;
+  border-radius: 6px;
+  color: var(--pds-text);
+  background: #eef1f6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+/* ========================================
+   작은 화면
+======================================== */
+
+@media (max-width: 1150px) {
+  .summary-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .account-controls {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 850px) {
+  .auth-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding-top: 28px;
+  }
+
+  .auth-panel {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .diary-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  #plan-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #diary-app header .nav {
+    align-items: stretch;
+  }
+
+  .diary-navigation {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .diary-navigation button {
+    padding: 10px 6px;
+  }
+
+  .account-controls {
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  #auth-gate {
+    margin: 32px 16px;
+    padding: 24px;
+  }
+
+  .auth-panel,
+  .diary-content .panel,
+  .diary-content .summary-panel {
+    padding: 18px;
+  }
+
+  #plan-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .task-item,
+  .log-item {
+    padding: 14px;
+  }
+
+  .task-actions,
+  .log-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .task-actions button,
+  .log-actions button {
+    width: 100%;
+  }
+
+  .summary-cards {
+    gap: 8px;
+  }
+
+  .summary-cards button {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .summary-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .diary-navigation {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ========================================
+   움직임 줄이기
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  .skip,
+  .diary-navigation button,
+  .plan-select,
+  .summary-cards button {
+    transition: none !important;
+    animation: none !important;
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "pds-diary",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plan Do See diary with authentication",
+  "dependencies": {
+    "bcryptjs": "3.0.3"
+  }
+}
