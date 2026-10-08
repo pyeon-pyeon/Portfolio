@@ -1024,6 +1024,79 @@
           </section>
         </div>
       </div>
+      <!-- 계정 삭제 -->
+      <section
+        class="panel account-delete-panel"
+        aria-labelledby="account-delete-title"
+      >
+        <h2 id="account-delete-title">계정 관리</h2>
+
+        <details id="account-delete-details">
+          <summary>계정 삭제 안내와 입력란 열기</summary>
+
+          <p id="account-delete-warning">
+            계정을 삭제하면 연결된 계획, 할 일, 실행 기록,
+            돌아보기와 계획 변경 기록이 함께 삭제됩니다.
+            삭제한 자료는 이 앱에서 복구할 수 없습니다.
+            필요한 자료는 먼저 요약 화면에서 JSON으로 내보내 주세요.
+          </p>
+
+          <form
+            id="account-delete-form"
+            method="post"
+            aria-describedby="account-delete-warning"
+          >
+            <fieldset id="account-delete-fields" disabled>
+              <legend>계정 삭제 확인</legend>
+
+              <label for="account-delete-password">
+                현재 비밀번호
+              </label>
+
+              <input
+                id="account-delete-password"
+                type="password"
+                autocomplete="current-password"
+                minlength="10"
+                required
+              >
+
+              <label for="account-delete-confirmation">
+                삭제 확인 문구
+              </label>
+
+              <input
+                id="account-delete-confirmation"
+                type="text"
+                autocomplete="off"
+                spellcheck="false"
+                aria-describedby="account-delete-confirmation-help"
+                required
+              >
+
+              <p id="account-delete-confirmation-help" class="help">
+                삭제하려면 위 입력란에
+                <strong>계정 삭제</strong>를 정확히 입력하세요.
+              </p>
+
+              <button
+                id="account-delete-submit"
+                type="submit"
+                class="danger"
+              >
+                내 계정과 자료 삭제
+              </button>
+            </fieldset>
+          </form>
+
+          <p
+            id="account-delete-message"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          ></p>
+        </details>
+      </section>
     </main>
 
     <footer class="site-footer wrap">

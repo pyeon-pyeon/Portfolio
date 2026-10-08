@@ -194,6 +194,106 @@ async function logout(req, res) {
     message: "로그아웃되었습니다.",
   });
 }
+// ==================================================
+// 계정 삭제
+// POST /api/auth?action=delete-account
+// ==================================================
+
+async function deleteAccount(req, res) {
+  const auth = await requireUser(req);
+
+  const body = readBody(req, [
+    "password",
+    "confirmation",
+  ]);
+
+  if (body.confirmation !== "계정 삭제") {
+    throw new ApiError(
+      "validation",
+      '삭제 확인 문구로 "계정 삭제"를 입력해 주세요.',
+      400
+    );
+  }
+
+  const password = readPassword(body.password);
+
+  // 계정 ID는 요청 본문이 아니라 검증된 세션에서 가져옵니다.
+  const users = await db(
+    "diary_users",
+    {
+      select: "id,password_hash",
+      id: `eq.${auth.user.id}`,
+      limit: "1",
+    },
+    { method: "GET" }
+  );
+
+  const user = users[0];
+
+  const matches = await verifyPassword(
+    password,
+    user?.password_hash
+  );
+
+  if (!user || !matches) {
+    throw new ApiError(
+      "invalid_password",
+      "현재 비밀번호가 올바르지 않습니다.",
+      403
+    );
+  }
+
+  // 외래키의 ON DELETE CASCADE로 연결 자료를 함께 삭제합니다.
+  // 사용자 → 계획 → 할 일 → 실행 기록
+  // 사용자 → 세션
+  // 계획 → 계획 변경 기록
+  const deleted = await db(
+    "diary_users",
+    {
+      select: "id",
+      id: `eq.${auth.user.id}`,
+    },
+    {
+      method: "DELETE",
+      headers: {
+        Prefer: "return=representation",
+      },
+    }
+  );
+
+  if (
+    deleted.length !== 1 ||
+    deleted[0].id !== auth.user.id
+  ) {
+    throw new ApiError(
+      "storage",
+      "계정 삭제 결과를 확인하지 못했습니다.",
+      503
+    );
+  }
+
+  // DB에서 모든 세션이 삭제된 뒤 브라우저의 세션 쿠키도 지웁니다.
+  // _lib/auth.js에서 사용하는 쿠키 이름·경로와 일치해야 합니다.
+  res.setHeader(
+    "Set-Cookie",
+    [
+      "__Host-pds_session=",
+      "Path=/",
+      "HttpOnly",
+      "Secure",
+      "SameSite=Strict",
+      "Max-Age=0",
+      "Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+    ].join("; ")
+  );
+
+  return res.status(200).json({
+    deleted: true,
+    logged_out: true,
+    message: "계정과 연결된 다이어리 자료를 삭제했습니다.",
+  });
+}
+
 
 // ==================================================
 // API handler
@@ -258,6 +358,9 @@ module.exports = async function handler(req, res) {
 
       case "logout":
         return await logout(req, res);
+      
+      case "delete-account":
+        return await deleteAccount(req, res);
 
       default:
         throw new ApiError(
