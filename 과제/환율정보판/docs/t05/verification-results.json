@@ -1,0 +1,112 @@
+{
+  "commit": "4fc5ea9c405b89b10fdd1fca79253adc1f44a83c",
+  "started": "2026-10-08T02:26:20.807Z",
+  "tests": [
+    {
+      "name": "서버: AUD 포함 정상 기록 및 JPY 단위",
+      "result": "PASS",
+      "evidence": "6개 통화 검증 및 aud_krw 직렬화 정상"
+    },
+    {
+      "name": "서버: AUD 누락 과거 기록 및 손상 거부",
+      "result": "PASS",
+      "evidence": "과거 AUD NULL 허용, AUD 문자열/0/음수/누락 모두 거부"
+    },
+    {
+      "name": "서버: 6개 API 수집·같은 날 3회 upsert·재조회 (mock DB)",
+      "result": "PASS",
+      "evidence": "실제 서버 함수 실행, fetch/DB 격리 응답, 1행 유지 및 AUD 재조회"
+    },
+    {
+      "name": "서버 실패 401",
+      "result": "PASS",
+      "evidence": "기대 오류 unauthorized"
+    },
+    {
+      "name": "서버 실패 403",
+      "result": "PASS",
+      "evidence": "기대 오류 unauthorized"
+    },
+    {
+      "name": "서버 실패 429",
+      "result": "PASS",
+      "evidence": "기대 오류 rate-limit"
+    },
+    {
+      "name": "서버 실패 offline",
+      "result": "PASS",
+      "evidence": "기대 오류 offline"
+    },
+    {
+      "name": "서버 실패 schema",
+      "result": "PASS",
+      "evidence": "기대 오류 schema"
+    },
+    {
+      "name": "서버 실패 slow",
+      "result": "PASS",
+      "evidence": "기대 오류 slow"
+    },
+    {
+      "name": "브라우저 실행",
+      "result": "FAIL",
+      "evidence": "browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝\n    at /workspace/scratch/c0355743ac46/t05-check/run.cjs:17:40"
+    },
+    {
+      "name": "board.js 합성 정상·900→910 비교 함수",
+      "result": "PASS",
+      "evidence": "board.js 실제 함수 VM 실행: AUD 차이 10원, 변화율 1.11%"
+    },
+    {
+      "name": "board.js 합성·상태 slow",
+      "result": "PASS",
+      "evidence": "실제 JS 함수: 오류 분류·정상값/기록 유지·복구 fresh/none"
+    },
+    {
+      "name": "board.js 합성·상태 unauthorized",
+      "result": "PASS",
+      "evidence": "실제 JS 함수: 오류 분류·정상값/기록 유지·복구 fresh/none"
+    },
+    {
+      "name": "board.js 합성·상태 rate-limit",
+      "result": "PASS",
+      "evidence": "실제 JS 함수: 오류 분류·정상값/기록 유지·복구 fresh/none"
+    },
+    {
+      "name": "board.js 합성·상태 offline",
+      "result": "PASS",
+      "evidence": "실제 JS 함수: 오류 분류·정상값/기록 유지·복구 fresh/none"
+    },
+    {
+      "name": "board.js 합성·상태 schema",
+      "result": "PASS",
+      "evidence": "실제 JS 함수: 오류 분류·정상값/기록 유지·복구 fresh/none"
+    },
+    {
+      "name": "board.js 합성·상태 aud-string",
+      "result": "PASS",
+      "evidence": "실제 JS 함수: 오류 분류·정상값/기록 유지·복구 fresh/none"
+    },
+    {
+      "name": "board.js 합성·상태 aud-zero",
+      "result": "PASS",
+      "evidence": "실제 JS 함수: 오류 분류·정상값/기록 유지·복구 fresh/none"
+    },
+    {
+      "name": "board.js 합성·상태 aud-negative",
+      "result": "PASS",
+      "evidence": "실제 JS 함수: 오류 분류·정상값/기록 유지·복구 fresh/none"
+    },
+    {
+      "name": "board.js 합성·상태 aud-missing",
+      "result": "PASS",
+      "evidence": "실제 JS 함수: 오류 분류·정상값/기록 유지·복구 fresh/none"
+    },
+    {
+      "name": "board.js 같은 날짜 병합·과거 AUD 비교 불가",
+      "result": "PASS",
+      "evidence": "동일 날짜 1건, 과거 AUD 미존재 시 비교 불가"
+    }
+  ],
+  "ended": "2026-10-08T02:28:07.455Z"
+}
