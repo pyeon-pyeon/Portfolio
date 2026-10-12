@@ -422,9 +422,9 @@
 
                 <div class="filter-grid">
                   <div class="field">
-                    <label for="plan-start-date">시작일</label>
+                    <label for="plan-start">시작일</label>
                     <input
-                      id="plan-start-date"
+                      id="plan-start"
                       name="start_date"
                       type="date"
                       required
@@ -432,9 +432,9 @@
                   </div>
 
                   <div class="field">
-                    <label for="plan-end-date">종료일</label>
+                    <label for="plan-end">종료일</label>
                     <input
-                      id="plan-end-date"
+                      id="plan-end"
                       name="end_date"
                       type="date"
                       required
@@ -464,9 +464,9 @@
                 </div>
 
                 <div class="field">
-                  <label for="plan-success-criteria">성공 기준</label>
+                  <label for="plan-success">성공 기준</label>
                   <textarea
-                    id="plan-success-criteria"
+                    id="plan-success"
                     name="success_criteria"
                     rows="3"
                     maxlength="2000"
@@ -485,11 +485,11 @@
                   </div>
 
                   <div class="field">
-                    <label for="plan-estimated-minutes">
+                    <label for="plan-estimated">
                       계획 전체 예상 시간 · 분
                     </label>
                     <input
-                      id="plan-estimated-minutes"
+                      id="plan-estimated"
                       name="estimated_minutes"
                       type="number"
                       min="1"
@@ -770,8 +770,8 @@
                 <input id="log-request-id" type="hidden">
 
                 <div class="field">
-                  <label for="log-task-id">실행한 할 일</label>
-                  <select id="log-task-id" name="task_id" required>
+                  <label for="log-task">실행한 할 일</label>
+                  <select id="log-task" name="task_id" required>
                     <option value="">
                       먼저 계획과 할 일을 등록하세요.
                     </option>
@@ -780,9 +780,9 @@
 
                 <div class="filter-grid">
                   <div class="field">
-                    <label for="log-started-at">시작 시각 · KST</label>
+                    <label for="log-start">시작 시각 · KST</label>
                     <input
-                      id="log-started-at"
+                      id="log-start"
                       type="datetime-local"
                       step="1"
                       required
@@ -790,9 +790,9 @@
                   </div>
 
                   <div class="field">
-                    <label for="log-ended-at">종료 시각 · KST</label>
+                    <label for="log-end">종료 시각 · KST</label>
                     <input
-                      id="log-ended-at"
+                      id="log-end"
                       type="datetime-local"
                       step="1"
                       required
@@ -824,9 +824,9 @@
                 </div>
 
                 <div class="field">
-                  <label for="log-blocked-reason">막혔던 이유</label>
+                  <label for="log-blocked">막혔던 이유</label>
                   <textarea
-                    id="log-blocked-reason"
+                    id="log-blocked"
                     name="blocked_reason"
                     rows="3"
                     maxlength="2000"
