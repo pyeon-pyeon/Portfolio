@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="패스키로 보호하는 포트폴리오 개인 공간입니다."
+  >
+
+  <meta name="robots" content="noindex, nofollow">
+
+  <title>개인 공간 | 편승훈 포트폴리오</title>
+
+  <link rel="stylesheet" href="private.css">
+
+  <script src="passkey.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">본문 바로가기</a>
+
+  <header class="site-header">
+    <div class="wrap header-content">
+      <a class="brand" href="index.html">
+        편승훈 포트폴리오
+      </a>
+
+      <nav aria-label="주요 메뉴">
+        <a href="index.html">공개 소개</a>
+        <a href="private.html" aria-current="page">
+          개인 공간
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="page-intro" aria-labelledby="page-title">
+      <p class="eyebrow">PASSKEY · PRIVATE SPACE</p>
+
+      <h1 id="page-title">패스키로 여는 개인 공간</h1>
+
+      <p>
+        공개 소개는 누구나 볼 수 있습니다.
+        이 공간의 자료는 패스키로 로그인한 계정에만 표시됩니다.
+      </p>
+
+      <p class="notice">
+        과제 검사용으로 만든 가상 계정과 자료를 사용합니다.
+        실제 연락처·지원 내역 등 개인정보는 넣지 않았습니다.
+      </p>
+    </section>
+
+    <section class="status-panel" aria-labelledby="status-title">
+      <h2 id="status-title">접속 상태</h2>
+
+      <p
+        id="connection-status"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        로그인 상태를 확인할 준비 중입니다.
+      </p>
+
+      <noscript>
+        <p class="error">
+          패스키 기능을 사용하려면 JavaScript를 활성화해야 합니다.
+          공개 소개 페이지는 위 링크에서 볼 수 있습니다.
+        </p>
+      </noscript>
+    </section>
+
+    <!-- 로그인 전 영역 -->
+    <div id="auth-area">
+      <div class="auth-grid">
+        <section
+          class="panel"
+          aria-labelledby="login-title"
+        >
+          <h2 id="login-title">패스키 로그인</h2>
+
+          <p class="help">
+            등록한 계정을 선택한 뒤 기기의 지문·얼굴·PIN 또는
+            보안 키로 승인해 주세요.
+            이 사이트의 로그인 비밀번호는 만들지 않습니다.
+          </p>
+
+          <form id="login-form" method="post">
+            <fieldset id="login-fields" disabled>
+              <legend class="sr-only">패스키 로그인 입력</legend>
+
+              <label for="login-account">계정</label>
+
+              <select id="login-account" required>
+                <option value="">계정을 선택하세요</option>
+                <option value="demo-a">가상 사용자 A</option>
+                <option value="demo-b">가상 사용자 B</option>
+              </select>
+
+              <button
+                id="login-button"
+                type="submit"
+                class="button primary"
+              >
+                패스키로 로그인
+              </button>
+            </fieldset>
+          </form>
+
+          <p
+            id="login-message"
+            class="message"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          ></p>
+        </section>
+
+        <section
+          class="panel"
+          aria-labelledby="registration-title"
+        >
+          <h2 id="registration-title">처음 사용하는 계정</h2>
+
+          <p class="help">
+            관리자가 발급한 일회성 초대값이 있어야
+            첫 패스키를 등록할 수 있습니다.
+            계정 이름만으로는 등록할 수 없습니다.
+          </p>
+
+          <details id="registration-details">
+            <summary>최초 패스키 등록 열기</summary>
+
+            <form id="registration-form" method="post">
+              <fieldset id="registration-fields" disabled>
+                <legend class="sr-only">
+                  최초 패스키 등록 입력
+                </legend>
+
+                <label for="registration-account">계정</label>
+
+                <select id="registration-account" required>
+                  <option value="">계정을 선택하세요</option>
+                  <option value="demo-a">가상 사용자 A</option>
+                  <option value="demo-b">가상 사용자 B</option>
+                </select>
+
+                <label for="registration-invite">
+                  일회성 등록 초대값
+                </label>
+
+                <input
+                  id="registration-invite"
+                  type="text"
+                  minlength="64"
+                  maxlength="64"
+                  pattern="[0-9a-f]{64}"
+                  autocomplete="off"
+                  autocapitalize="none"
+                  spellcheck="false"
+                  aria-describedby="registration-invite-help"
+                  required
+                >
+
+                <p id="registration-invite-help" class="help">
+                  최초 등록 권한을 확인하는 값입니다.
+                  로그인 비밀번호가 아닙니다.
+                  등록 성공 후에는 다시 사용할 수 없습니다.
+                </p>
+
+                <label for="registration-name">
+                  패스키 이름
+                </label>
+
+                <input
+                  id="registration-name"
+                  type="text"
+                  maxlength="80"
+                  placeholder="예: 내 노트북 패스키"
+                  autocomplete="off"
+                  required
+                >
+
+                <p class="help">
+                  등록 과정에서 패스키 저장 위치를 확인해 두세요.
+                  Google 비밀번호 관리자, 기기 자체,
+                  외부 보안 키 등 실제 선택한 위치를
+                  인증 설명서에 기록합니다.
+                </p>
+
+                <button
+                  id="registration-button"
+                  type="submit"
+                  class="button primary"
+                >
+                  첫 패스키 등록
+                </button>
+              </fieldset>
+            </form>
+
+            <p
+              id="registration-message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></p>
+          </details>
+        </section>
+      </div>
+
+      <section
+        class="panel recovery-panel"
+        aria-labelledby="recovery-title"
+      >
+        <h2 id="recovery-title">패스키를 모두 잃었나요?</h2>
+
+        <p>
+          등록한 패스키가 하나도 남지 않으면 로그인할 수 없습니다.
+          비밀번호 로그인이나 공개된 복구 버튼은 제공하지 않습니다.
+        </p>
+
+        <p>
+          이 과제에서는 관리자가 별도로 본인 여부를 확인한 뒤
+          사용할 수 없는 패스키를 정리하고
+          새로운 일회성 등록 초대를 발급하는 방식으로 복구합니다.
+        </p>
+
+        <p class="help">
+          앱에서 마지막 패스키를 삭제하면 기존 자료는 유지되지만
+          새 패스키를 등록하기 전까지 접근할 수 없습니다.
+        </p>
+      </section>
+    </div>
+
+    <!-- 로그인 후 영역: 서버에서 받은 자료만 표시 -->
+    <div id="private-area" hidden>
+      <section
+        class="panel account-panel"
+        aria-labelledby="account-title"
+      >
+        <div class="panel-heading">
+          <div>
+            <h2 id="account-title" tabindex="-1">
+              로그인한 개인 공간
+            </h2>
+
+            <p id="account-name"></p>
+            <p id="session-expiry" class="help"></p>
+          </div>
+
+          <button
+            id="logout-button"
+            type="button"
+            class="button secondary"
+            disabled
+          >
+            로그아웃
+          </button>
+        </div>
+      </section>
+
+      <section
+        class="panel"
+        aria-labelledby="private-items-title"
+      >
+        <div class="panel-heading">
+          <div>
+            <h2 id="private-items-title">나만 보는 자료</h2>
+
+            <p class="help">
+              로그인한 계정의 가상 자료만 서버에서 가져옵니다.
+            </p>
+          </div>
+
+          <button
+            id="reload-items-button"
+            type="button"
+            class="button secondary"
+            disabled
+          >
+            자료 새로고침
+          </button>
+        </div>
+
+        <p
+          id="private-items-message"
+          class="message"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        ></p>
+
+        <p id="private-items-empty" hidden>
+          등록된 비공개 자료가 없습니다.
+        </p>
+
+        <ul
+          id="private-items-list"
+          class="private-items-list"
+          aria-label="비공개 자료 목록"
+        ></ul>
+      </section>
+
+      <section
+        class="panel"
+        aria-labelledby="credentials-title"
+      >
+        <div class="panel-heading">
+          <div>
+            <h2 id="credentials-title">내 패스키</h2>
+
+            <p class="help">
+              이름과 등록일을 확인할 수 있습니다.
+              로그인에 사용한 패스키도 표시합니다.
+            </p>
+          </div>
+
+          <button
+            id="reload-credentials-button"
+            type="button"
+            class="button secondary"
+            disabled
+          >
+            목록 새로고침
+          </button>
+        </div>
+
+        <p id="credentials-count">등록된 패스키 확인 중</p>
+
+        <ul
+          id="credentials-list"
+          class="credentials-list"
+          aria-label="등록된 패스키 목록"
+        ></ul>
+
+        <p
+          id="credentials-message"
+          class="message"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        ></p>
+
+        <p class="warning">
+          패스키를 삭제하면 해당 패스키로 만든 세션도 종료됩니다.
+          현재 로그인에 사용한 패스키를 삭제하면 다시 로그인해야 합니다.
+          마지막 패스키까지 삭제하면 관리자 복구가 필요합니다.
+        </p>
+      </section>
+
+      <section
+        class="panel"
+        aria-labelledby="additional-title"
+      >
+        <h2 id="additional-title">패스키 추가</h2>
+
+        <p class="help">
+          기기를 잃었을 때를 대비해 두 번째 패스키를 등록하세요.
+          가능하면 다른 기기나 별도의 보안 키를 사용하세요.
+        </p>
+
+        <form id="additional-form" method="post">
+          <fieldset id="additional-fields" disabled>
+            <legend class="sr-only">
+              추가 패스키 등록 입력
+            </legend>
+
+            <label for="additional-name">새 패스키 이름</label>
+
+            <input
+              id="additional-name"
+              type="text"
+              maxlength="80"
+              placeholder="예: 예비 보안 키"
+              autocomplete="off"
+              required
+            >
+
+            <button
+              id="additional-button"
+              type="submit"
+              class="button primary"
+            >
+              패스키 추가 등록
+            </button>
+          </fieldset>
+        </form>
+
+        <p
+          id="additional-message"
+          class="message"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        ></p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="wrap site-footer">
+    <p>패스키 인증 과제 · 가상 자료 사용</p>
+    <a href="index.html">공개 소개로 돌아가기</a>
+  </footer>
+</body>
+</html>
