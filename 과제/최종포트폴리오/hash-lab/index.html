@@ -1,0 +1,802 @@
+-<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="description"
+    content="Salt의 역할과 비밀번호 후보 검증 비용을 가상 데이터로 체험하는 Hash Lab. salted SHA-256, bcrypt, Argon2id를 비교합니다."
+  >
+
+  <meta name="theme-color" content="#090e16">
+  <meta name="color-scheme" content="dark">
+
+  <title>Hash Lab | 비밀번호 저장 방식 비교</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">본문 바로가기</a>
+
+  <!-- 배경 장식 -->
+  <div class="ambient-background" aria-hidden="true">
+    <div class="ambient-glow glow-blue"></div>
+    <div class="ambient-glow glow-green"></div>
+    <div class="background-grid"></div>
+  </div>
+
+  <!-- 상단 메뉴 -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#home" aria-label="Hash Lab 첫 화면">
+        <span class="brand-symbol" aria-hidden="true">H_</span>
+        <span class="brand-text">
+          HASH LAB
+          <span>BY PYEON SEUNGHOON</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="실습 메뉴">
+        <a href="#salt-lab">01 Salt</a>
+        <a href="#benchmark-lab">02 측정</a>
+        <a href="#research">03 논문</a>
+      </nav>
+
+      <a
+        class="portfolio-back-link"
+        href="../index.html#works"
+      >
+        <span aria-hidden="true">↖</span>
+        포트폴리오로
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- 첫 화면 -->
+    <section class="hero container" id="home" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">
+          PASSWORD STORAGE · INTERACTIVE EXPERIMENT
+        </p>
+
+        <h1 id="hero-title">
+          Salt만 넣으면,<br>
+          <span class="text-gradient">충분할까요?</span>
+        </h1>
+
+        <p class="hero-description">
+          비밀번호 저장을 배우는 개발자가
+          <strong>salt의 역할과 후보 검증 비용의 차이</strong>를 이해하도록,
+          세 가지 저장 방식을 가상 데이터로 비교합니다.
+        </p>
+
+        <p class="research-origin">
+          바탕 논문
+          <span>
+            「Salt만으로 충분한가?
+            SHA-256과 bcrypt의 비밀번호 후보 검증 비용 비교」
+          </span>
+        </p>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="#salt-lab">
+            첫 실습 시작
+            <span aria-hidden="true">↘</span>
+          </a>
+
+          <a class="button button-secondary" href="#research">
+            논문 결과 먼저 보기
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="visual-orbit orbit-one"></div>
+        <div class="visual-orbit orbit-two"></div>
+
+        <div class="hash-core">
+          <span class="core-symbol">#</span>
+          <span class="core-caption">SAME INPUT.<br>DIFFERENT COST.</span>
+        </div>
+
+        <div class="algorithm-node node-sha">
+          <span class="node-number">01</span>
+          <strong>SHA-256</strong>
+          <span>Salt와 빠른 해시</span>
+        </div>
+
+        <div class="algorithm-node node-bcrypt">
+          <span class="node-number">02</span>
+          <strong>bcrypt</strong>
+          <span>조절하는 계산 비용</span>
+        </div>
+
+        <div class="algorithm-node node-argon">
+          <span class="node-number">03</span>
+          <strong>Argon2id</strong>
+          <span>메모리와 계산 비용</span>
+        </div>
+
+        <span class="visual-coordinate">LOCAL EXPERIMENT / NO ACCOUNT</span>
+      </div>
+    </section>
+
+    <!-- 데이터 사용 안내 -->
+    <div class="container">
+      <aside class="privacy-notice" aria-labelledby="privacy-title">
+        <span class="notice-icon" aria-hidden="true">↳</span>
+
+        <div>
+          <h2 id="privacy-title">실제 비밀번호가 필요하지 않습니다.</h2>
+          <p>
+            제공된 가상 문자열만 사용합니다.
+            실습 계산은 브라우저에서 처리하며 입력값을 서버로 보내거나
+            계정 정보로 저장하지 않도록 구성합니다.
+            이 앱은 실제 계정이나 유출된 해시를 검사하는 도구가 아닙니다.
+          </p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- 세 가지 사용자 행동 -->
+    <section class="journey-section container" aria-labelledby="journey-title">
+      <div class="section-heading compact-heading">
+        <p class="eyebrow">THREE STEPS</p>
+        <h2 id="journey-title">세 번의 확인으로 이해합니다.</h2>
+      </div>
+
+      <ol class="journey-grid">
+        <li>
+          <a href="#salt-lab">
+            <span class="step-number">01</span>
+            <h3>Salt 효과 확인</h3>
+            <p>같은 가상 문자열에 다른 salt를 적용합니다.</p>
+            <span class="step-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#benchmark-lab">
+            <span class="step-number">02</span>
+            <h3>세 방식 측정</h3>
+            <p>같은 후보 목록의 검증 비용을 비교합니다.</p>
+            <span class="step-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#research">
+            <span class="step-number">03</span>
+            <h3>논문과 대조</h3>
+            <p>기존 실험과 새 측정의 조건·한계를 살핍니다.</p>
+            <span class="step-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 1단계 Salt 실습 -->
+    <section
+      class="lab-section section-space"
+      id="salt-lab"
+      aria-labelledby="salt-title"
+    >
+      <div class="container">
+
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">01 / DIFFERENT SALTS</p>
+            <h2 id="salt-title">
+              입력은 같아도,<br>
+              <span class="text-accent">저장값은 다르게.</span>
+            </h2>
+          </div>
+
+          <p class="section-description">
+            Salt는 비밀 비밀번호가 아닙니다.
+            이 실습에서는 같은 가상 문자열에 서로 다른
+            16바이트 salt를 적용한 SHA-256 결과를 확인합니다.
+          </p>
+        </div>
+
+        <div class="lab-layout">
+
+          <form class="control-panel" id="salt-form">
+            <div class="panel-heading">
+              <h3>가상 입력 선택</h3>
+              <span class="panel-tag">예시 데이터</span>
+            </div>
+
+            <div class="form-field">
+              <label for="sample-password">실습 문자열</label>
+
+              <select
+                id="sample-password"
+                name="sample"
+                aria-describedby="sample-help"
+                required
+              >
+                <option value="LabOnly-0016-Example!">
+                  LabOnly-0016-Example!
+                </option>
+                <option value="StudyOnly-Hash-Lab-2026!">
+                  StudyOnly-Hash-Lab-2026!
+                </option>
+                <option value="DemoOnly-Salt-Compare!">
+                  DemoOnly-Salt-Compare!
+                </option>
+              </select>
+
+              <p class="field-help" id="sample-help">
+                실제 비밀번호를 입력하는 칸이 아닙니다.
+                선택한 예시 문자열은 결과 확인을 위해 공개됩니다.
+              </p>
+            </div>
+
+            <div class="formula-block">
+              <p class="formula-label">실습에서 계산할 식</p>
+              <code>SHA256(salt 바이트 || 문자열 UTF-8 바이트)</code>
+              <p>
+                <span aria-hidden="true">||</span>는 두 바이트열을
+                순서대로 이어 붙인다는 뜻입니다.
+              </p>
+            </div>
+
+            <button
+              class="button button-primary button-full"
+              id="salt-run-button"
+              type="submit"
+              disabled
+            >
+              서로 다른 Salt로 계산
+              <span aria-hidden="true">↗</span>
+            </button>
+
+            <p class="form-status" id="salt-status" role="status">
+              실습 기능을 준비 중입니다.
+            </p>
+          </form>
+
+          <div class="result-panel">
+            <div class="panel-heading">
+              <h3>두 저장값 비교</h3>
+              <span class="panel-tag">salted SHA-256</span>
+            </div>
+
+            <div class="salt-result-grid">
+
+              <article class="hash-output">
+                <h4><span class="output-dot dot-blue"></span>Salt A</h4>
+
+                <dl>
+                  <dt>Salt · 16바이트 · 16진수</dt>
+                  <dd><code id="salt-a-value">계산 전</code></dd>
+
+                  <dt>SHA-256 · 16진수</dt>
+                  <dd><code id="hash-a-value">계산 전</code></dd>
+                </dl>
+              </article>
+
+              <article class="hash-output">
+                <h4><span class="output-dot dot-green"></span>Salt B</h4>
+
+                <dl>
+                  <dt>Salt · 16바이트 · 16진수</dt>
+                  <dd><code id="salt-b-value">계산 전</code></dd>
+
+                  <dt>SHA-256 · 16진수</dt>
+                  <dd><code id="hash-b-value">계산 전</code></dd>
+                </dl>
+              </article>
+
+            </div>
+
+            <div class="result-verdict" id="salt-verdict" role="status">
+              계산하면 두 salt와 저장값의 차이를 표시합니다.
+            </div>
+
+            <p class="result-note">
+              다른 저장값이 나왔다는 사실만으로
+              후보 하나의 계산 비용이 높아졌다고 판단할 수는 없습니다.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 2단계 실제 측정 -->
+    <section
+      class="benchmark-section section-space"
+      id="benchmark-lab"
+      aria-labelledby="benchmark-title"
+    >
+      <div class="container">
+
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">02 / MEASURE THE COST</p>
+            <h2 id="benchmark-title">
+              다른 것은,<br>
+              <span class="text-accent">후보를 확인하는 비용.</span>
+            </h2>
+          </div>
+
+          <p class="section-description">
+            제공된 가상 후보를 끝까지 검사합니다.
+            목표 해시 생성 시간과 후보 검증 시간은 구분하고,
+            검증 횟수로 나눈 후보당 시간을 비교합니다.
+          </p>
+        </div>
+
+        <div class="benchmark-layout">
+
+          <form class="control-panel" id="benchmark-form">
+            <div class="panel-heading">
+              <h3>실험 설정</h3>
+              <span class="panel-tag">브라우저 측정</span>
+            </div>
+
+            <div class="form-field">
+              <label for="candidate-count">가상 후보 수</label>
+
+              <select
+                id="candidate-count"
+                name="candidateCount"
+                required
+              >
+                <option value="8" selected>8개 · 빠른 체험</option>
+                <option value="16">16개</option>
+                <option value="32">32개 · 논문과 같은 후보 수</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="bcrypt-cost">bcrypt cost</label>
+
+              <select
+                id="bcrypt-cost"
+                name="bcryptCost"
+                aria-describedby="bcrypt-help"
+                required
+              >
+                <option value="10">10</option>
+                <option value="12" selected>12 · 논문 설정</option>
+              </select>
+
+              <p class="field-help" id="bcrypt-help">
+                값이 높으면 계산이 오래 걸릴 수 있습니다.
+              </p>
+            </div>
+
+            <fieldset class="parameter-fieldset">
+              <legend>Argon2id 설정</legend>
+
+              <div class="form-field">
+                <label for="argon-memory">메모리 비용</label>
+                <select id="argon-memory" name="argonMemory" required>
+                  <option value="19456" selected>19 MiB</option>
+                  <option value="32768">32 MiB</option>
+                  <option value="65536">64 MiB</option>
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label for="argon-iterations">반복 횟수</label>
+                <select
+                  id="argon-iterations"
+                  name="argonIterations"
+                  required
+                >
+                  <option value="2" selected>2회</option>
+                  <option value="3">3회</option>
+                </select>
+              </div>
+
+              <p class="field-help">
+                병렬도는 1로 고정합니다.
+                표시한 메모리는 알고리즘 설정값이며,
+                브라우저 전체 메모리를 측정한 값은 아닙니다.
+              </p>
+            </fieldset>
+
+            <div class="benchmark-actions">
+              <button
+                class="button button-primary button-full"
+                id="benchmark-run-button"
+                type="submit"
+                disabled
+              >
+                세 방식 비교 실행
+              </button>
+
+              <button
+                class="button button-secondary button-full"
+                id="benchmark-cancel-button"
+                type="button"
+                disabled
+              >
+                측정 취소
+              </button>
+            </div>
+
+            <p class="field-help">
+              기기에 따라 시간이 걸릴 수 있습니다.
+              중복 실행은 막고 계산 중에도 취소할 수 있도록 연결합니다.
+            </p>
+          </form>
+
+          <div class="benchmark-results">
+
+            <div
+              class="execution-panel"
+              id="execution-panel"
+              aria-busy="false"
+            >
+              <div class="execution-heading">
+                <span class="execution-dot" aria-hidden="true"></span>
+                <h3 id="benchmark-state">준비 전</h3>
+              </div>
+
+              <p id="benchmark-status" role="status">
+                계산 모듈을 준비한 뒤 실험을 시작할 수 있습니다.
+              </p>
+
+              <label class="sr-only" for="benchmark-progress">
+                실험 진행률
+              </label>
+
+              <progress
+                id="benchmark-progress"
+                max="100"
+                value="0"
+              >0%</progress>
+
+              <p class="progress-caption" id="benchmark-progress-label">
+                실행 전
+              </p>
+            </div>
+
+            <div
+              class="error-panel"
+              id="benchmark-error"
+              role="alert"
+              hidden
+            >
+              <h3>측정을 완료하지 못했습니다.</h3>
+              <p id="benchmark-error-message"></p>
+              <p>설정을 확인한 뒤 다시 실행해 주세요.</p>
+            </div>
+
+            <div
+              class="benchmark-table-wrap"
+              role="region"
+              aria-label="세 방식의 검증 비용 비교 표"
+              tabindex="0"
+            >
+              <table class="benchmark-table">
+                <caption>
+                  현재 브라우저의 새 측정 결과
+                </caption>
+
+                <thead>
+                  <tr>
+                    <th scope="col">방식</th>
+                    <th scope="col">실제 검증 횟수</th>
+                    <th scope="col">총 검증 시간</th>
+                    <th scope="col">후보당 시간</th>
+                    <th scope="col">초당 검증 수</th>
+                  </tr>
+                </thead>
+
+                <tbody id="benchmark-table-body">
+                  <tr>
+                    <th scope="row">salted SHA-256</th>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                  </tr>
+
+                  <tr>
+                    <th scope="row">bcrypt</th>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                  </tr>
+
+                  <tr>
+                    <th scope="row">Argon2id</th>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="measurement-summary">
+              <h3>이번 측정에서 확인한 것</h3>
+              <p id="benchmark-interpretation" role="status">
+                측정이 끝나면 설정과 결과의 차이를 설명합니다.
+              </p>
+            </div>
+
+            <div class="result-toolbar">
+              <button
+                class="button button-secondary"
+                id="download-result-button"
+                type="button"
+                disabled
+              >
+                이번 결과 JSON 저장
+                <span aria-hidden="true">↓</span>
+              </button>
+
+              <a class="inline-link" href="#research">
+                논문 결과와 대조하기
+                <span aria-hidden="true">↘</span>
+              </a>
+            </div>
+
+            <details class="method-details">
+              <summary>무엇을 측정하고 무엇을 제외하나요?</summary>
+
+              <div class="details-body">
+                <ul>
+                  <li>
+                    같은 가상 후보 목록을 각 방식에서 사용하고,
+                    정답을 찾아도 목록 끝까지 검사합니다.
+                  </li>
+                  <li>
+                    목표 해시 생성과 초기 준비 시간은
+                    후보 검증 시간에서 제외합니다.
+                  </li>
+                  <li>
+                    빠른 방식은 안정적으로 시간을 관찰하기 위해
+                    후보 목록을 여러 번 순회할 수 있습니다.
+                    결과에는 실제 검증 횟수를 표시합니다.
+                  </li>
+                  <li>
+                    후보당 시간은 총 검증 시간을 실제 검증 횟수로 나눕니다.
+                    순회·함수 호출 등 구현 비용이 포함됩니다.
+                  </li>
+                  <li>
+                    서로 다른 알고리즘의 cost·반복 횟수·메모리 설정은
+                    같은 크기의 보안 수준을 뜻하지 않습니다.
+                  </li>
+                  <li>
+                    취소·오류로 끝난 실행을 세 방식 비교 완료로 표시하지 않습니다.
+                  </li>
+                </ul>
+              </div>
+            </details>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3단계 논문 결과와 대조 -->
+    <section
+      class="research-section section-space"
+      id="research"
+      aria-labelledby="research-title"
+    >
+      <div class="container">
+
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">03 / RESEARCH INTO PRACTICE</p>
+            <h2 id="research-title">
+              논문에서 확인한 것,<br>
+              <span class="text-accent">앱에서 더 살펴볼 것.</span>
+            </h2>
+          </div>
+
+          <p class="section-description">
+            기존 논문은 salted SHA-256과 bcrypt를 비교했습니다.
+            Argon2id는 이 앱에서 추가한 확장 실험이며,
+            기존 논문에서 측정한 결과가 아닙니다.
+          </p>
+        </div>
+
+        <article class="research-paper">
+          <div class="paper-heading">
+            <span class="panel-tag">10번 과제 · 기존 논문</span>
+
+            <h3>
+              Salt만으로 충분한가?<br>
+              SHA-256과 bcrypt의 비밀번호 후보 검증 비용 비교
+            </h3>
+
+            <p>편승훈 · 2026.10.14</p>
+          </div>
+
+          <div class="research-metrics">
+            <div>
+              <span class="research-metric-label">salted SHA-256</span>
+              <strong>0.744<span>μs / 후보</span></strong>
+            </div>
+
+            <div>
+              <span class="research-metric-label">bcrypt · cost 12</span>
+              <strong>185.631<span>ms / 후보</span></strong>
+            </div>
+
+            <div>
+              <span class="research-metric-label">반올림 전 평균값의 비율</span>
+              <strong>249,356.63<span>배</span></strong>
+            </div>
+          </div>
+
+          <p class="research-conclusion">
+            두 방식 모두 salt에 따라 저장값이 달라졌지만,
+            후보를 검증하는 비용은 크게 달랐습니다.
+            <strong>
+              Salt의 존재만으로 높은 추측 비용이 보장되지는 않습니다.
+            </strong>
+          </p>
+
+          <details class="method-details">
+            <summary>논문의 측정 조건과 한계 보기</summary>
+
+            <div class="details-body">
+              <dl class="research-conditions">
+                <dt>환경</dt>
+                <dd>Windows 11 · Python 3.14.7 · bcrypt 5.0.0 · 단일 작업자</dd>
+
+                <dt>데이터</dt>
+                <dd>가상 후보 32개 · 방식별 10회 · 원자료 총 20행</dd>
+
+                <dt>실제 검증 횟수</dt>
+                <dd>
+                  측정당 SHA-256 1,394,240회,
+                  bcrypt 32회.
+                  횟수로 정규화한 후보당 시간을 비교했습니다.
+                </dd>
+
+                <dt>표시값</dt>
+                <dd>
+                  시간은 반올림한 값입니다.
+                  비율은 반올림 전 평균 후보당 시간으로 계산했습니다.
+                </dd>
+
+                <dt>한계</dt>
+                <dd>
+                  특정 PC·Python 구현의 결과입니다.
+                  GPU 성능·실제 해독 시간·모든 비밀번호의 안전성을
+                  나타내지 않습니다.
+                </dd>
+              </dl>
+            </div>
+          </details>
+
+          <!-- 다음 단계에서 실제 논문 공개 주소를 연결합니다. -->
+          <p class="availability-note" id="paper-link-slot">
+            <a class="inline-link" href="./paper.html">
+                바탕 논문 전문 읽기
+                <span aria-hidden="true">↗</span>
+            </a>
+          </p>
+        </article>
+
+        <div class="comparison-panel">
+          <div>
+            <p class="eyebrow">COMPARE THE CONDITIONS</p>
+            <h3>숫자가 다르면, 조건부터 확인합니다.</h3>
+          </div>
+
+          <p id="research-comparison" role="status">
+            2단계 측정을 마치면 이번 실행과 논문의 조건 차이를 표시합니다.
+            브라우저·라이브러리·기기·설정이 다르므로
+            논문의 비율을 그대로 재현할 필요는 없습니다.
+          </p>
+        </div>
+
+        <div class="learning-grid">
+
+          <article class="learning-card">
+            <span class="learning-index">01</span>
+            <h3>Salt가 하는 일</h3>
+            <p>
+              같은 비밀번호의 저장값을 다르게 하고,
+              미리 계산한 결과를 여러 계정에 재사용하기 어렵게 합니다.
+              Salt 자체를 비밀키처럼 취급하지 않습니다.
+            </p>
+          </article>
+
+          <article class="learning-card">
+            <span class="learning-index">02</span>
+            <h3>검증 비용이 하는 일</h3>
+            <p>
+              후보 하나를 확인하는 데 필요한 자원을 늘립니다.
+              실제 서비스에서는 로그인 응답 시간과
+              서버 자원도 함께 고려해야 합니다.
+            </p>
+          </article>
+
+          <article class="learning-card">
+            <span class="learning-index">03</span>
+            <h3>시간만으로 순위 매기지 않기</h3>
+            <p>
+              이번 실행에서 가장 느린 방식이
+              모든 환경에서 가장 안전하다는 뜻은 아닙니다.
+              메모리 설정·구현·환경과 공식 지침을 함께 확인합니다.
+            </p>
+          </article>
+
+        </div>
+
+        <aside class="reference-note">
+          <h3>함께 읽을 자료</h3>
+
+          <p>
+            <a
+              href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              OWASP Password Storage Cheat Sheet
+              <span class="sr-only">(새 탭)</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </p>
+
+          <p>
+            전용 비밀번호 해싱 방식과 설정을 선택할 때 참고하는 자료입니다.
+            이 앱의 체험 결과만으로 운영 환경의 보안 설정을 결정하지 않습니다.
+          </p>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- 사용 범위와 실행 상태 -->
+    <section class="about-section container" aria-labelledby="about-title">
+      <div class="about-panel">
+        <div>
+          <p class="eyebrow">ABOUT THIS APP</p>
+          <h2 id="about-title">연구를 직접 확인하는 작은 실험실.</h2>
+        </div>
+
+        <div>
+          <p>
+            기존 논문의 실험 결과를 이해하고,
+            Argon2id까지 비교 범위를 넓혀 보는 교육용 앱입니다.
+            실제 사용자 계정이나 유출 데이터를 사용하지 않습니다.
+          </p>
+
+          <p class="module-status" id="module-status" role="status">
+            계산 모듈 연결 전입니다.
+          </p>
+
+          <noscript>
+            <p class="error-message">
+              실습을 실행하려면 JavaScript가 필요합니다.
+              논문 설명은 JavaScript 없이도 읽을 수 있습니다.
+            </p>
+          </noscript>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-brand">HASH LAB<span>_</span></p>
+      <p>© 2026 편승훈 · 가상 데이터 기반 비밀번호 해싱 실습</p>
+      <a href="#home">맨 위로 <span aria-hidden="true">↑</span></a>
+    </div>
+  </footer>
+
+</body>
+</html>
