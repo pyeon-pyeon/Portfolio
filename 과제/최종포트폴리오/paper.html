@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="편승훈의 salted SHA-256과 bcrypt 후보 검증 비용 비교 연구. 실험 방법·결과·한계와 참고문헌을 공개합니다."><meta name="theme-color" content="#080e0c"><title>Salt만으로 충분한가? | 편승훈 연구</title><style>
+:root{color-scheme:dark;--bg:#080e0c;--text:#eef4ed;--muted:#afc0b2;--accent:#b4ff75;--line:#304336}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:100px}body{margin:0;background:var(--bg);color:var(--text);font-family:"Pretendard","Noto Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.95;word-break:keep-all;overflow-wrap:anywhere}a{color:var(--accent);text-underline-offset:5px}a:hover{color:#deffbd}:focus-visible{outline:3px solid var(--accent);outline-offset:5px}.skip{position:fixed;top:10px;left:10px;z-index:20;padding:8px 16px;background:var(--accent);color:#080e0c;transform:translateY(-160%)}.skip:focus{transform:none}.topbar{position:sticky;top:0;z-index:10;background:#080e0cf2;border-bottom:1px solid var(--line);backdrop-filter:blur(16px)}.topbar-inner{max-width:1260px;margin:auto;padding:17px 30px;display:flex;justify-content:space-between;gap:20px}.topbar a{text-decoration:none;font-size:13px}.mark{font-weight:850;letter-spacing:-.05em;font-size:20px!important}.topbar button{border:1px solid var(--line);border-radius:7px;padding:8px 14px;background:#15241a;color:var(--text);cursor:pointer}.top-actions{display:flex;align-items:center;gap:22px}.layout{max-width:1260px;margin:auto;display:grid;grid-template-columns:240px minmax(0,1fr);gap:70px;padding:65px 30px 100px}.sidebar{align-self:start;position:sticky;top:110px}.eyebrow{font-size:10px;letter-spacing:.15em;color:var(--accent);font-family:Consolas,monospace}.sidebar nav{display:flex;flex-direction:column;margin-top:18px;gap:7px}.sidebar nav a{display:block;padding:7px 10px;border-left:1px solid var(--line);color:var(--muted);text-decoration:none;font-size:12px}.sidebar nav a:hover{color:var(--accent);border-color:var(--accent)}.article{min-width:0}.paper-label{margin-bottom:28px}.article h1{font-size:clamp(38px,5vw,62px);line-height:1.2;letter-spacing:-.065em;margin:0 0 28px;text-wrap:balance}.article h2{font-size:27px;line-height:1.5;letter-spacing:-.04em;margin:60px 0 22px;padding-top:30px;border-top:1px solid var(--line)}.article h1+h2{font-size:22px;color:var(--muted);font-weight:500;margin:0 0 25px;padding:0;border:0}.article h3{font-size:20px;letter-spacing:-.03em;line-height:1.5;margin:32px 0 16px;color:var(--text)}.article p,.article li{font-size:15px;color:#c4d1c5}.article p{margin:0 0 20px}.article ul,.article ol{padding-left:24px}.article li{padding-left:4px;margin:7px 0}.article>ul:first-of-type{padding:18px 24px;background:#112017;border:1px solid var(--line);border-radius:12px;list-style:none}.table-scroll{overflow-x:auto;max-width:100%;margin:24px 0;border:1px solid var(--line);border-radius:12px}table{border-collapse:collapse;min-width:100%;font-size:13px;line-height:1.8}th,td{padding:13px 17px;text-align:left;border-bottom:1px solid var(--line);min-width:130px}th{background:#1b2d20;color:var(--accent);font-weight:650}td{color:#c4d1c5}tr:last-child td{border-bottom:0}.article a{overflow-wrap:anywhere}.notice{padding:18px 22px;border-left:3px solid var(--accent);background:#122016;margin-bottom:40px}.notice p{font-size:12px;margin:0;color:var(--muted)}footer{border-top:1px solid var(--line);padding:30px;text-align:center;color:var(--muted);font-size:12px}@media(max-width:950px){.layout{grid-template-columns:1fr;gap:35px;max-width:850px;padding-top:35px}.sidebar{position:static}.sidebar nav{flex-direction:row;flex-wrap:wrap;gap:7px}.sidebar nav a{border:1px solid var(--line);border-radius:5px;padding:5px 10px}}@media(max-width:550px){.layout{padding:30px 20px 60px}.topbar-inner{padding:14px 20px}.top-actions{gap:12px}.top-actions a{font-size:11px}.topbar button{font-size:11px;padding:7px 10px}.article h2{font-size:24px}.article p,.article li{font-size:14px}.sidebar nav a{font-size:11px}th,td{padding:11px 13px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}@media print{:root{color-scheme:light;--text:#111;--muted:#444;--accent:#245c27;--line:#bbb}body{background:white;color:#111}.topbar,.sidebar,.skip,.notice{display:none}.layout{display:block;max-width:none;padding:0}.article p,.article li,td{color:#222}.article>ul:first-of-type,th{background:#f1f4f0}.article h1{font-size:30px}.article h2{break-after:avoid;font-size:23px;margin-top:30px}.article h3{break-after:avoid}.table-scroll{overflow:visible}table{font-size:10px}th,td{min-width:0;padding:8px}a{color:#245c27}footer{margin-top:30px}}
+</style></head>
+<body><a class="skip" href="#paper">논문 본문 바로가기</a><header class="topbar"><div class="topbar-inner"><a class="mark" href="./index.html">PYEON.</a><div class="top-actions"><a href="./index.html#works">포트폴리오로 돌아가기 ↗</a><button type="button" id="print-button" hidden>인쇄 · PDF 저장</button></div></div></header><div class="layout"><aside class="sidebar"><p class="eyebrow">RESEARCH / PROJECT 10</p><nav aria-label="논문 목차"><a href="#section-1">SHA-256과 bcrypt의 비밀번호 후보 검증 비용 비교</a><a href="#section-2">초록</a><a href="#section-3">1. 서론</a><a href="#section-4">2. 방법</a><a href="#section-5">3. 결과</a><a href="#section-6">4. 논의</a><a href="#section-7">5. 결론</a><a href="#section-8">참고문헌</a><a href="#section-9">부록 A. 재현 방법</a><a href="#section-10">부록 B. AI와 나의 판단</a></nav></aside><main class="article" id="paper"><p class="eyebrow paper-label">PASSWORD HASHING · EXPERIMENTAL STUDY</p><h1>Salt만으로 충분한가?</h1>
+<h2 id="section-1">SHA-256과 bcrypt의 비밀번호 후보 검증 비용 비교</h2>
+<ul>
+<li>작성자: 편승훈</li>
+<li>작성일: 2026-10-14</li>
+<li>관심 분야: 비밀번호 저장 보안과 오프라인 추측 공격</li>
+</ul>
+<h2 id="section-2">초록</h2>
+<p>본 연구는 비밀번호에 salt를 적용하는 것만으로 충분한 추측 비용이
+확보되는지에 대한 의문에서 출발했다. 동일한 PC와 가상 후보
+32개를 사용해 단일 salted SHA-256과 bcrypt(cost 12)의 검증 비용을
+각각 10회 측정했다. 후보당 평균 검증 시간은 SHA-256이 0.744μs,
+bcrypt가 185.631ms였으며, bcrypt가 약 249,357배 길었다.
+10회 모두 bcrypt의 후보당 시간이 더 길어 원래 가설은 지지되지 않았다.
+결과는 salt의 존재와 후보당 계산 비용을 구분해야 한다는 해석을
+뒷받침한다. 다만 한 PC와 특정 구현의 반복 측정이므로 실제 공격자의
+GPU 성능이나 모든 비밀번호의 안전성으로 일반화할 수 없다.</p>
+<h2 id="section-3">1. 서론</h2>
+<h3>1.1 문제의식</h3>
+<p>비밀번호를 해싱하고 salt까지 적용하면 어떤 해싱 방식을 사용하더라도
+안전할 것이라고 생각했다. 그러나 해시가 유출된 경우 공격자는
+로그인 서버에 요청하지 않고 후보 비밀번호를 계산하여 비교할 수 있다.
+따라서 저장값이 서로 다르게 나타나는 것과, 후보 하나를 검사하는
+비용이 높다는 것은 구분할 필요가 있다.</p>
+<p>Provos와 Mazières는 계산 비용을 조절할 수 있는 bcrypt를 제안하고,
+기존 비밀번호 해싱 방식의 평가와 처리량 비교를 제시했다[1].
+NIST는 salt와 적절한 비밀번호 해싱 방식을 함께 사용하여
+오프라인 추측 비용을 높일 것을 요구한다[2].
+OWASP는 빠른 SHA-256 단독 사용이 비밀번호 저장에 부적합하다고
+설명하고 전용 비밀번호 해싱 방식을 권고한다[3].</p>
+<h3>1.2 주제 선정 과정</h3>
+<p>다음 질문 10개를 검토했다.</p>
+<ol>
+<li>같은 비밀번호에 다른 salt를 사용하면 해시가 달라지는가?</li>
+<li>salt 길이가 SHA-256 검증 시간에 어떤 영향을 주는가?</li>
+<li>salted SHA-256과 bcrypt의 후보 검증 속도는 얼마나 다른가?</li>
+<li>bcrypt cost가 증가하면 검증 시간이 어떻게 변하는가?</li>
+<li>비밀번호 길이가 검증 시간에 어떤 영향을 주는가?</li>
+<li>후보 개수가 증가하면 전체 검증 시간이 어떻게 변하는가?</li>
+<li>CPU 작업자 수에 따라 처리량이 어떻게 달라지는가?</li>
+<li>온라인 로그인 제한이 반복 요청을 얼마나 차단하는가?</li>
+<li>SHA-256 라이브러리에 따라 속도가 얼마나 달라지는가?</li>
+<li>다른 PC에서 실행하면 결과가 얼마나 달라지는가?</li>
+</ol>
+<p>최종 주제로 3번을 선택했다.
+salt가 있어도 해싱 방식의 계산 비용이 중요한지 직접 확인할 수 있고,
+하루 안에 가상 데이터로 측정할 수 있기 때문이다.
+1번은 salt의 효과를 확인하는 보조 검사로 포함했다.</p>
+<p>보류한 후보와 이유는 다음과 같다.</p>
+<ul>
+<li>salt 길이 비교: 해싱 방식 자체의 비용 차이에 집중하기 위해 보류했다.</li>
+<li>작업자 수 비교: 병렬 실행 효과가 섞이지 않도록 단일 작업자로 고정했다.</li>
+<li>온라인 로그인 제한: 네트워크와 서버 정책을 제외하고 계산 비용을 측정했다.</li>
+</ul>
+<h3>1.3 연구 가설</h3>
+<p>동일한 PC와 가상 비밀번호 후보 집합에서, salt를 적용한 단일
+SHA-256의 후보당 검증 시간은 bcrypt(cost 12) 이상일 것이다.</p>
+<p>‘안전하다’라는 넓은 표현을 직접 측정할 수 있는 후보당 검증 시간으로
+좁혔다. SHA-256의 시간이 bcrypt보다 짧다면 가설과 반대되는 결과로
+다루며, 차이가 측정 변동에 비해 불명확하면 판단을 유보하기로 했다.</p>
+<h3>1.4 알려진 사실과 직접 확인할 내용</h3>
+<p>문헌은 salt와 계산 비용의 역할이 다르다는 배경을 제공한다.
+본 연구는 새로운 암호학적 사실을 제안하는 대신,
+선택한 PC와 구현에서 두 방식의 검증 시간과 처리량 차이를 직접 확인한다.</p>
+<h2 id="section-4">2. 방법</h2>
+<h3>2.1 실험 환경</h3>
+<div class="table-scroll" role="region" aria-label="논문 표, 가로로 스크롤할 수 있습니다" tabindex="0"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>설정</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>운영체제</td>
+<td>Windows 11, 빌드 26200</td>
+</tr>
+<tr>
+<td>실행 환경</td>
+<td>Python 3.14.7, AMD64</td>
+</tr>
+<tr>
+<td>bcrypt 라이브러리</td>
+<td>5.0.0</td>
+</tr>
+<tr>
+<td>OpenSSL</td>
+<td>3.5.7</td>
+</tr>
+<tr>
+<td>CPU 식별 정보</td>
+<td>Intel64 Family 6 Model 167 Stepping 1</td>
+</tr>
+<tr>
+<td>논리 CPU 수</td>
+<td>16</td>
+</tr>
+<tr>
+<td>실험 작업자 수</td>
+<td>1</td>
+</tr>
+<tr>
+<td>시간 측정</td>
+<td>time.perf_counter_ns</td>
+</tr>
+</tbody>
+</table></div>
+<p>실행 환경은 data/environment-main.json에 보관했다.
+논리 CPU가 16개라는 사실은 16개 작업자로 실험했다는 뜻이 아니다.</p>
+<h3>2.2 데이터와 비교 조건</h3>
+<p>직접 생성한 가상 문자열 32개를 후보로 사용했다.
+목표 문자열은 LabOnly-0016-Example!이며,
+실제 사용자 계정이나 유출된 비밀번호는 사용하지 않았다.</p>
+<div class="table-scroll" role="region" aria-label="논문 표, 가로로 스크롤할 수 있습니다" tabindex="0"><table>
+<thead>
+<tr>
+<th>구분</th>
+<th>조건</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>바꾼 조건</td>
+<td>salted SHA-256 / bcrypt cost 12</td>
+</tr>
+<tr>
+<td>고정 조건</td>
+<td>PC·후보 목록·목표 문자열·실행 환경·단일 작업자</td>
+</tr>
+<tr>
+<td>SHA-256 구성</td>
+<td>SHA256(salt 바이트</td>
+</tr>
+<tr>
+<td>SHA-256 salt</td>
+<td>무작위 16바이트</td>
+</tr>
+<tr>
+<td>bcrypt salt</td>
+<td>라이브러리가 생성한 128비트 salt</td>
+</tr>
+<tr>
+<td>본실험</td>
+<td>각 방식 10회, 총 20행</td>
+</tr>
+<tr>
+<td>조기 종료</td>
+<td>정답을 찾아도 후보 목록 끝까지 검사</td>
+</tr>
+</tbody>
+</table></div>
+<p>각 방식은 별도의 salt를 사용했다.
+salt의 길이는 맞췄지만, 두 방식의 내부 salt 처리 구조까지
+동일하게 만든 것은 아니다.</p>
+<h3>2.3 측정 범위</h3>
+<p>측정에는 후보 순회, 해싱 또는 checkpw 호출,
+비교와 일치 수 집계가 포함된다.
+목표 해시 생성, 파일 저장, 후보의 문자열 사전 변환은 제외했다.</p>
+<p>계산식은 다음과 같다.</p>
+<ul>
+<li>후보당 검증 시간 = 총 검증 시간 ÷ 실제 검증 횟수</li>
+<li>초당 검증 수 = 실제 검증 횟수 ÷ 총 검증 시간(초)</li>
+</ul>
+<p>SHA-256은 한 번의 순회 시간이 짧아 교정 실행으로 약 1초 분량의
+반복 수를 정했다. 본실험에서 후보 목록을 43,570번 순회하여
+측정당 1,394,240회를 검증했다.
+bcrypt는 후보 목록을 한 번 순회하여 측정당 32회를 검증했다.</p>
+<p>두 방식은 검증 횟수가 다르므로 총시간만 비교하지 않고
+횟수로 정규화한 지표를 비교했다.</p>
+<h3>2.4 실행 절차와 설계 변경</h3>
+<p>2026-10-14 KST에 로컬 PC에서 예비 실행과 본실험을 수행했다.</p>
+<ol>
+<li>가상 후보·salt·목표 해시 생성</li>
+<li>서로 다른 salt의 저장값 변화 확인</li>
+<li>준비 실행과 SHA-256 반복 수 교정</li>
+<li>예비 측정 후 본실험 조건 확정</li>
+<li>각 방식 10회 측정, 실행 순서를 번갈아 배치</li>
+<li>각 측정값을 CSV에 즉시 저장</li>
+<li>분석 코드로 행 수·검증 횟수·계산식 확인</li>
+</ol>
+<p>초기 논의에서는 각 방식 5회를 제안했으나,
+세부 과제 기준을 확인하고 본실험 전에 10회로 변경했다.
+SHA-256 반복 수는 예비 실행에서 정하고 본실험 동안 고정했다.</p>
+<p>가상 데이터는 data/fixture.json,
+실험 설정은 data/protocol.json,
+예비 결과는 data/pilot.csv,
+본실험 원자료는 data/raw.csv에 저장했다.</p>
+<h2 id="section-5">3. 결과</h2>
+<h3>3.1 salt 보조 검사</h3>
+<p>동일한 가상 비밀번호에 서로 다른 salt를 적용한 결과,
+SHA-256과 bcrypt 모두 서로 다른 저장값이 생성됐다.
+bcrypt의 두 저장값은 원래 가상 비밀번호로 모두 검증됐다.</p>
+<p>이 결과는 해당 입력에서 salt가 저장값을 다르게 만든다는 것을
+보여 준다. 사전 계산 공격의 효과 전체를 측정한 실험은 아니다.</p>
+<p>보조 검사 원자료는 data/salt-check.json에 보관했다.</p>
+<h3>3.2 본실험 결과</h3>
+<div class="table-scroll" role="region" aria-label="논문 표, 가로로 스크롤할 수 있습니다" tabindex="0"><table>
+<thead>
+<tr>
+<th>지표</th>
+<th style="text-align: right;">salted SHA-256</th>
+<th style="text-align: right;">bcrypt cost 12</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>측정 횟수</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr>
+<td>측정당 검증 횟수</td>
+<td style="text-align: right;">1,394,240</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr>
+<td>평균 후보당 검증 시간</td>
+<td style="text-align: right;">0.744μs</td>
+<td style="text-align: right;">185.631ms</td>
+</tr>
+<tr>
+<td>후보당 시간의 표본 표준편차</td>
+<td style="text-align: right;">0.020μs</td>
+<td style="text-align: right;">0.874ms</td>
+</tr>
+<tr>
+<td>최소 후보당 시간</td>
+<td style="text-align: right;">0.710μs</td>
+<td style="text-align: right;">184.999ms</td>
+</tr>
+<tr>
+<td>최대 후보당 시간</td>
+<td style="text-align: right;">0.779μs</td>
+<td style="text-align: right;">188.006ms</td>
+</tr>
+<tr>
+<td>평균 초당 검증 수</td>
+<td style="text-align: right;">1,344,197.099</td>
+<td style="text-align: right;">5.387</td>
+</tr>
+</tbody>
+</table></div>
+<p>표시값은 반올림했으며, 비율 계산에는 반올림 전 값을 사용했다.
+평균 초당 검증 수는 각 측정의 처리량을 산술평균한 값이다.</p>
+<p>bcrypt의 평균 후보당 시간은 SHA-256의 약 249,356.63배였다.
+같은 반복 번호로 비교했을 때 10회 모두 bcrypt가 더 느렸다.</p>
+<h3>3.3 가설 판단</h3>
+<p>원래 가설은 지지되지 않았다.
+salted SHA-256의 후보당 시간이 bcrypt 이상일 것으로 설정했지만,
+실제 측정에서는 SHA-256이 더 짧았다.</p>
+<p>판단의 근거는 data/raw.csv의 elapsed_ns와 checks이다.
+원자료 20행을 모두 분석에 포함했으며 제외한 측정값은 없다.
+bcrypt가 더 빠르게 나온 반복은 없었다.
+추가적인 통계적 유의성 검정은 수행하지 않았다.</p>
+<h2 id="section-6">4. 논의</h2>
+<h3>4.1 salt만으로 충분한가?</h3>
+<p>보조 검사에서는 두 방식 모두 salt에 따라 저장값이 달라졌다.
+그러나 본실험에서는 salt가 있는 SHA-256도 많은 후보를 빠르게
+검증할 수 있었다.</p>
+<p>이 결과는 salt의 존재만으로 높은 추측 비용이 보장되지는 않는다는
+해석을 뒷받침한다. salt는 여러 계정에서 같은 저장값이 나타나는 것과
+사전 계산 결과의 재사용을 어렵게 하는 역할을 한다.
+후보 하나의 계산 비용을 높이는 역할은 별도로 필요하다[1–3].</p>
+<h3>4.2 무엇을 사용해야 하는가?</h3>
+<p>비밀번호 저장에는 salt와 함께 계산 비용을 조절할 수 있는
+적절한 전용 비밀번호 해싱 방식을 사용해야 한다.</p>
+<p>이번 실험에서는 bcrypt cost 12가 SHA-256보다 높은 검증 비용을
+보였다. 그렇다고 모든 신규 시스템에서 bcrypt가 최선이라는 뜻은
+아니다. OWASP는 Argon2id를 우선 권고하고,
+bcrypt는 기존 시스템에서 사용할 때의 조건을 제시한다[3].
+Argon2id는 이번 실험에서 측정하지 않았다.</p>
+<h3>4.3 원래 가설과 반대 결과에 대한 검토</h3>
+<p>첫째, salt가 저장값을 바꾼다는 효과를 후보당 계산 비용 증가와
+같은 것으로 생각했던 점을 재검토했다.</p>
+<p>둘째, 실제 검증 횟수가 서로 달라 총시간 비교가 왜곡될 가능성을
+확인했다. 분석에서는 실제 횟수로 나눈 시간과 처리량을 사용했다.</p>
+<p>셋째, Python 반복문·라이브러리 구현·PC 부하가 결과에 영향을 줄
+가능성을 고려했다. 모든 반복을 포함하고 실행 순서를 번갈아 배치했지만,
+이 요인들을 완전히 분리하거나 통제한 것은 아니다.</p>
+<p>원래 가설은 결과에 맞춰 덮어쓰지 않고 그대로 남겼다.
+후속 연구에서는 다른 PC·구현·cost에서 같은 방향의 차이가
+나타나는지 검증할 수 있다.</p>
+<h3>4.4 한계</h3>
+<ul>
+<li>한 PC와 특정 라이브러리 구현의 결과다.</li>
+<li>동일한 목표 해시에 대한 반복 측정이며 독립적인 사용자 표본이 아니다.</li>
+<li>후보 집합과 문자열 길이가 제한되어 있다.</li>
+<li>SHA-256과 bcrypt의 목록 반복 수 및 측정 시간이 다르다.</li>
+<li>Python 순회·비교·함수 호출 비용이 포함된다.</li>
+<li>CPU 부하와 발열·클록 변화를 별도로 기록하지 않았다.</li>
+<li>GPU·다중 작업자·최적화된 공격 도구의 성능은 측정하지 않았다.</li>
+<li>실제 비밀번호가 발견될 확률이나 시간을 측정하지 않았다.</li>
+<li>온라인 로그인 제한·네트워크·계정 잠금은 검증하지 않았다.</li>
+<li>bcrypt의 cost는 12 한 가지 조건만 측정했다.</li>
+</ul>
+<h2 id="section-7">5. 결론</h2>
+<p>동일한 PC와 가상 후보 집합에서 salt를 적용한 단일 SHA-256과
+bcrypt(cost 12)를 각각 10회 측정한 결과, bcrypt의 후보당 평균
+검증 시간이 약 249,357배 길었다. SHA-256이 bcrypt 이상으로
+느릴 것이라는 원래 가설은 이번 실험에서 지지되지 않았다.</p>
+<p>두 방식 모두 서로 다른 salt에서 다른 저장값을 만들었지만,
+그 사실만으로 비슷한 추측 비용이 확보되지는 않았다.
+따라서 비밀번호 저장에서는 salt의 역할과 후보당 계산 비용을
+구분하고, 문헌과 서비스 환경에 맞는 전용 비밀번호 해싱 방식을
+선택해야 한다. 다만 이 비율은 특정 환경의 측정값이며,
+모든 비밀번호의 안전성이나 실제 공격 환경의 성능을 보장하지 않는다.</p>
+<h2 id="section-8">참고문헌</h2>
+<p>[1] Provos, N., &amp; Mazières, D. (1999).
+A Future-Adaptable Password Scheme.
+Proceedings of the 1999 USENIX Annual Technical Conference,
+FREENIX Track.
+<a href="https://www.usenix.org/legacy/event/usenix99/provos/provos.pdf">https://www.usenix.org/legacy/event/usenix99/provos/provos.pdf</a></p>
+<p>[2] National Institute of Standards and Technology. (2025).
+Digital Identity Guidelines: Authentication and Authenticator Management.
+NIST Special Publication 800-63B-4.
+<a href="https://pages.nist.gov/800-63-4/sp800-63b.html">https://pages.nist.gov/800-63-4/sp800-63b.html</a></p>
+<p>[3] OWASP Foundation. (연도 미상).
+Password Storage Cheat Sheet. OWASP Cheat Sheet Series.
+<a href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html">https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html</a>
+자료 조회일: 2026-10-14.</p>
+<h2 id="section-9">부록 A. 재현 방법</h2>
+<p>Python과 의존성을 준비한 뒤 실행한다.</p>
+<ol>
+<li>
+<p>기존 원자료 분석:
+   python analyze.py</p>
+</li>
+<li>
+<p>새로운 측정:
+   기존 자료를 덮어쓰지 않도록 별도 복사본에서
+   data와 results 폴더를 제외한 코드·문서를 준비한다.
+   python experiment.py --mode pilot
+   python experiment.py --mode main
+   python analyze.py</p>
+</li>
+</ol>
+<p>의존성은 requirements.txt,
+환경은 data/environment-main.json,
+상세 실행 조건은 data/protocol.json에서 확인한다.</p>
+<p>재측정값이 원래 수치와 완전히 같을 필요는 없다.
+원자료 보존, 설계 일치, 계산 재현 여부를 확인한다.</p>
+<h2 id="section-10">부록 B. AI와 나의 판단</h2>
+<p>① AI에게 맡긴 일:
+문헌 탐색, 실험·분석 코드 초안과 논문 구조 작성을 맡겼다.</p>
+<p>② 내가 직접 판단한 일:
+salt만으로 충분한지라는 연구 질문을 제시하고,
+내 PC에서 가상 데이터 실험을 실행하여 원자료를 수집했다.</p>
+<p>③ AI 제안을 따르지 않은 일:
+처음 제안된 단순 속도 비교에서
+‘salt를 넣으면 어떤 해시든 안전한가’라는 의문을 중심으로
+연구 질문을 변경했다.</p><aside class="notice" aria-label="공개 페이지 안내"><p>이 페이지는 2026년 10월 14일 작성한 논문 원문의 웹 열람본입니다. 재현에 필요한 코드와 원자료는 별도 연구 패키지에 포함되며, 이 페이지에는 포함되지 않습니다. 참고문헌의 저자명은 출처 표기를 위해 유지했습니다. 실험에 사용한 문자열은 실제 계정의 비밀번호가 아닌 가상 시험값입니다.</p></aside></main></div><footer>© 2026 편승훈 · 원문의 실험 결과와 한계를 함께 공개합니다.</footer><script>"use strict";const printButton=document.getElementById("print-button");printButton.hidden=false;printButton.addEventListener("click",()=>window.print());</script></body></html>

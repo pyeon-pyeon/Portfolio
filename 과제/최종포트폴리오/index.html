@@ -1,0 +1,1016 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="description"
+    content="구조를 읽고, 다음 해답을 만드는 사람. 의료기기 소프트웨어 개발에서 IT 운영과 보안으로 나아가는 편승훈의 포트폴리오."
+  >
+
+  <meta name="theme-color" content="#080e0c">
+  <meta name="color-scheme" content="dark">
+
+  <title>편승훈 — 구조를 읽고, 다음 해답을 만드는 사람</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="portfolio.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">본문 바로가기</a>
+
+  <!-- 장식 요소는 보조 기술에서 제외합니다. -->
+  <div class="ambient-background" aria-hidden="true">
+    <div class="ambient-glow ambient-glow-one"></div>
+    <div class="ambient-glow ambient-glow-two"></div>
+    <div class="background-grid"></div>
+    <div class="background-noise"></div>
+  </div>
+
+  <!-- JavaScript에서 스크롤 진행률을 표시합니다. -->
+  <div class="reading-progress" aria-hidden="true">
+    <div class="reading-progress-bar" id="reading-progress"></div>
+  </div>
+
+  <!-- 상단 메뉴 -->
+  <header class="site-header">
+    <div class="header-inner container">
+      <a class="brand" href="#home" aria-label="편승훈 포트폴리오 첫 화면">
+        <span class="brand-symbol" aria-hidden="true">P.</span>
+        <span class="brand-text">
+          편승훈
+          <span>DEVELOPMENT → SECURITY</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="주요 메뉴">
+        <a href="#story">이야기</a>
+        <a href="#records">기록</a>
+        <a href="#works">대표작</a>
+        <a href="#resume">이력서</a>
+      </nav>
+
+      <a class="header-contact" href="#contact">
+        연결하기
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- 첫 화면 -->
+    <section class="hero section-shell" id="home" aria-labelledby="hero-title">
+      <div class="hero-layout container">
+
+        <div class="hero-copy">
+          <p class="eyebrow hero-eyebrow">
+            <span class="status-dot" aria-hidden="true"></span>
+            IT SYSTEMS · SECURITY · PEOPLE
+          </p>
+
+          <p class="hero-name">편승훈</p>
+
+          <!-- 최종 한 줄 소개는 본인의 표현으로 확정합니다. -->
+          <h1 class="hero-title" id="hero-title">
+            <span class="hero-title-line">구조를 읽고,</span>
+            <span class="hero-title-line">
+              다음 <span class="text-accent">해답</span>을
+            </span>
+            <span class="hero-title-line">만드는 사람.</span>
+          </h1>
+
+          <p class="hero-description">
+            의료기기 소프트웨어를 설계하고 배포했습니다.<br>
+            이제 그 경험에 IT 운영과 보안의 관점을 더합니다.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="#story">
+              내 이야기 읽기
+              <span aria-hidden="true">↘</span>
+            </a>
+
+            <a class="button button-outline" href="#works">
+              대표작 살펴보기
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="hero-shortcuts" aria-label="추가 내용 바로가기">
+            <a href="#records">기록과 근거</a>
+            <span aria-hidden="true">/</span>
+            <a href="#resume">이력서와 경력</a>
+          </div>
+        </div>
+
+        <!-- 실제 시스템 상태를 뜻하지 않는 경력 개념도입니다. -->
+        <div class="hero-visual" aria-hidden="true">
+          <div class="system-map">
+
+            <div class="orbit orbit-outer"></div>
+            <div class="orbit orbit-middle"></div>
+            <div class="orbit orbit-inner"></div>
+
+            <svg
+              class="system-connections"
+              viewBox="0 0 600 600"
+              fill="none"
+              focusable="false"
+            >
+              <defs>
+                <linearGradient
+                  id="connection-gradient"
+                  x1="100"
+                  y1="100"
+                  x2="500"
+                  y2="500"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset="0" stop-color="#b4ff75" stop-opacity="0.1"/>
+                  <stop offset="0.5" stop-color="#b4ff75"/>
+                  <stop offset="1" stop-color="#70e3c3" stop-opacity="0.2"/>
+                </linearGradient>
+              </defs>
+
+              <g stroke="url(#connection-gradient)" stroke-width="1.5">
+                <path d="M300 300 L140 165"/>
+                <path d="M300 300 L470 190"/>
+                <path d="M300 300 L460 440"/>
+                <path d="M300 300 L145 435"/>
+                <path d="M140 165 L470 190 L460 440 L145 435 Z"/>
+              </g>
+
+              <g fill="#b4ff75">
+                <circle cx="140" cy="165" r="4"/>
+                <circle cx="470" cy="190" r="4"/>
+                <circle cx="460" cy="440" r="4"/>
+                <circle cx="145" cy="435" r="4"/>
+              </g>
+            </svg>
+
+            <div class="system-core">
+              <span class="core-bracket">[</span>
+              <span class="core-letter">P</span>
+              <span class="core-bracket">]</span>
+              <span class="core-caption">UNDERSTAND THE FLOW</span>
+            </div>
+
+            <div class="system-node node-development">
+              <span class="node-index">01</span>
+              <strong>DEVELOPMENT</strong>
+              <span>직접 만드는 경험</span>
+            </div>
+
+            <div class="system-node node-systems">
+              <span class="node-index">02</span>
+              <strong>SYSTEMS</strong>
+              <span>전체 흐름의 이해</span>
+            </div>
+
+            <div class="system-node node-security">
+              <span class="node-index">03</span>
+              <strong>SECURITY</strong>
+              <span>안전한 운영의 관점</span>
+            </div>
+
+            <div class="system-node node-people">
+              <span class="node-index">04</span>
+              <strong>PEOPLE</strong>
+              <span>함께 확인하는 과정</span>
+            </div>
+
+            <div class="visual-coordinate coordinate-top">
+              EXPERIENCE MAP / PYEON
+            </div>
+
+            <div class="visual-coordinate coordinate-bottom">
+              BUILD · UNDERSTAND · VERIFY
+            </div>
+          </div>
+
+          <div class="visual-caption">
+            <span class="caption-line"></span>
+            각각의 경험을 하나의 흐름으로 연결합니다.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="hero-bottom container">
+        <p>개발 경험에서 운영과 보안으로</p>
+        <a class="scroll-cue" href="#story">
+          SCROLL TO EXPLORE
+          <span aria-hidden="true">↓</span>
+        </a>
+        <span class="hero-edition">PORTFOLIO / 2026</span>
+      </div>
+    </section>
+
+    <!-- 경력과 방향을 요약한 띠 -->
+    <div class="expertise-strip">
+      <div class="container expertise-inner">
+        <span>의료기기 소프트웨어</span>
+        <span class="strip-divider" aria-hidden="true">✳</span>
+        <span>시스템 설계 · DB · 배포</span>
+        <span class="strip-divider" aria-hidden="true">✳</span>
+        <span>IT 운영 · 보안 학습</span>
+        <span class="strip-divider" aria-hidden="true">✳</span>
+        <span>함께 문제를 푸는 방식</span>
+      </div>
+    </div>
+
+    <!-- 자기소개 본편 -->
+    <section class="story-section section-space" id="story" aria-labelledby="story-title">
+      <div class="container">
+
+        <div class="section-heading section-heading-split">
+          <div>
+            <p class="eyebrow">
+              <span class="section-number">01</span>
+              THE STORY
+            </p>
+            <h2 id="story-title">
+              다음 방향은,<br>
+              <span class="text-muted">지나온 경험에서.</span>
+            </h2>
+          </div>
+
+          <p class="section-intro">
+            만드는 즐거움에서 시작해,<br>
+            시스템과 사람을 함께 이해하는 일로.
+          </p>
+        </div>
+
+        <div class="story-body">
+
+          <article class="story-row">
+            <div class="story-side">
+              <span class="chapter-number" aria-hidden="true">01</span>
+              <p class="story-date">2026.03 · 계약 종료 이후</p>
+              <span class="story-category">THE TURNING POINT</span>
+            </div>
+
+            <div class="story-content">
+              <h3>
+                만들어 본 경험이 있어도,<br>
+                다음 길이 바로 보이지는 않았습니다.
+              </h3>
+
+              <!-- 최종 제출 전 첫 문장은 본인이 직접 고칩니다. -->
+              <p>
+                2026년 3월, 의료기기 소프트웨어 개발 일을 마친 뒤
+                다음 직장을 찾기 시작했습니다.
+                직접 설계하고 배포한 경험이 있었지만,
+                이직은 생각처럼 풀리지 않았습니다.
+                혼자 개발하던 때부터 품었던
+                “내가 제대로 하고 있는 걸까”라는 질문이 다시 떠올랐습니다.
+              </p>
+
+              <p>
+                저는 편승훈입니다. 치기공을 전공하고 병원 약제팀에서 근무했으며,
+                이후 개발을 배워 의료기기 소프트웨어를 만들었습니다.
+                처음 관심을 가진 계기는 개발자 붐이었습니다.
+                하지만 계속하게 한 것은 직접 무언가를 만드는 재미였습니다.
+              </p>
+            </div>
+          </article>
+
+          <article class="story-row">
+            <div class="story-side">
+              <span class="chapter-number" aria-hidden="true">02</span>
+              <p class="story-date">2024.01–2026.03 · 개발 경험</p>
+              <span class="story-category">BUILDING THE FOUNDATION</span>
+            </div>
+
+            <div class="story-content">
+              <h3>
+                기능을 만들며,<br>
+                전체를 보는 습관을 배웠습니다.
+              </h3>
+
+              <p>
+                약 2년 동안 손 기능 진단 의료기기 소프트웨어의
+                프론트엔드·백엔드·데이터베이스·배포를 맡았습니다.
+                Spring을 배우고 입문했지만 실무에는
+                Rust·Svelte·Tauri가 필요했습니다.
+                구조를 비교하고 문서를 찾아가며 로그인부터
+                촬영 결과 저장과 PDF 출력까지 연결했습니다.
+                서버에 집중되던 AI 추론을 로컬로 옮겨 부하를 분산하기도 했습니다.
+              </p>
+
+              <p>
+                문제를 만나면 데이터가 어디서 들어와 어떻게 처리되는지부터 살폈습니다.
+                다만 개발자가 혼자였기에 제 판단을 함께 검토할 사람이 없었습니다.
+                끝까지 만드는 힘과 함께,
+                다른 사람과 확인하는 과정도 필요하다고 느꼈습니다.
+              </p>
+            </div>
+          </article>
+
+          <div class="story-statement">
+            <span class="statement-mark" aria-hidden="true">“</span>
+            <p>
+              혼자 해결하는 힘에,<br>
+              <span class="text-accent">함께 확인하는 방식</span>을 더합니다.
+            </p>
+          </div>
+
+          <article class="story-row">
+            <div class="story-side">
+              <span class="chapter-number" aria-hidden="true">03</span>
+              <p class="story-date">2026.08.20 → 10.06 · 학습 기록</p>
+              <span class="ability-chip">자기조절력</span>
+            </div>
+
+            <div class="story-content">
+              <h3>더 하겠다는 다짐을, 할 수 있는 조건으로.</h3>
+
+              <p>
+                2026년, 개발 경험을 IT 운영과 보안으로 넓히기 위해
+                정보보안 교육을 시작했습니다.
+                8월 20일에는 자격증 공부와 다른 활동을 함께 하기 벅차
+                공부하지 못했다고 적었습니다.
+                계획을 일부만 실행한 날에는 무엇이 막혔는지 돌아봤습니다.
+                10월 6일에는 알림을 끄고 정해 둔 시간 동안 과제를 마쳤습니다.
+                의욕에만 기대기보다 집중할 조건을 만드는 연습이었습니다.
+              </p>
+            </div>
+          </article>
+
+          <article class="story-row">
+            <div class="story-side">
+              <span class="chapter-number" aria-hidden="true">04</span>
+              <p class="story-date">2026.08.14 → 10.02 · 동료와의 대화</p>
+              <span class="ability-chip">대인관계력</span>
+            </div>
+
+            <div class="story-content">
+              <h3>설명하는 것에서, 서로 이해했는지 확인하는 쪽으로.</h3>
+
+              <p>
+                8월 14일 기록에는 코드를 한 줄씩 설명해
+                이해에 도움이 됐다는 동료의 피드백이 남아 있습니다.
+                10월 2일에는 상대의 말을 지레짐작하지 않고
+                대화 뒤 핵심을 한두 가지로 정리했다고 적었습니다.
+                제가 아는 것을 말하는 것만큼,
+                상대가 무엇을 말하고 이해했는지 확인하는 일이 중요해졌습니다.
+              </p>
+            </div>
+          </article>
+
+          <article class="story-row">
+            <div class="story-side">
+              <span class="chapter-number" aria-hidden="true">05</span>
+              <p class="story-date">2026.10.13–14 · 오류 해결</p>
+              <span class="ability-chip">자기동기력</span>
+            </div>
+
+            <div class="story-content">
+              <h3>풀리지 않은 문제를, 다음 날의 행동으로.</h3>
+
+              <p>
+                10월 13일에는 방어전 과제의 오류가 풀리지 않아
+                계속 시도 중이라고 기록했습니다.
+                다음 날에는 30분 넘게 원인을 추적해 해결했다고 남겼습니다.
+                막혔다는 기록 다음에 다시 시도한 기록을 이어 붙였습니다.
+              </p>
+
+              <p>
+                현재 저는 IT·보안 분야에 지원하며 공부하고 있습니다.
+                직접 시스템을 만들어 본 경험에 운영과 보안의 관점을 더하고 있습니다.
+              </p>
+
+              <!-- 최종 제출 전 마지막 문장은 본인이 직접 고칩니다. -->
+              <p class="story-closing">
+                모르는 것은 확인하고, 막힌 문제는 나누어 살피며,
+                함께 일하는 사람이 다음 행동을 판단할 수 있도록
+                설명하는 동료가 되고 싶습니다.
+              </p>
+
+              <a class="inline-link" href="#recovery-evidence">
+                다시 시도한 기록 보기
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 숫자와 출처 -->
+    <section class="records-section section-space" id="records" aria-labelledby="records-title">
+      <div class="container">
+
+        <div class="section-heading section-heading-split">
+          <div>
+            <p class="eyebrow">
+              <span class="section-number">02</span>
+              EVIDENCE, NOT JUST WORDS
+            </p>
+            <h2 id="records-title">
+              다짐은 지나가도,<br>
+              <span class="text-accent">기록은 남습니다.</span>
+            </h2>
+          </div>
+
+          <p class="section-intro">
+            13주 과정 중 지금까지 모인 리추얼 기록.<br>
+            잘한 날과 부족했던 날을 함께 셌습니다.
+          </p>
+        </div>
+
+        <div class="metrics-grid">
+
+          <article class="metric-card">
+            <span class="metric-index">RECORD 01</span>
+            <h3>기록이 있는 날짜</h3>
+
+            <p class="metric-value">
+              <span id="metric-record-days">41</span>
+              <span class="metric-unit">일</span>
+            </p>
+
+            <p class="metric-description">
+              아침 또는 마무리 리추얼이 있는 고유 날짜
+            </p>
+
+            <a class="metric-source" href="#record-sources">
+              출처와 계산법 <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+
+          <article class="metric-card">
+            <span class="metric-index">RECORD 02</span>
+            <h3>하루를 돌아본 기록</h3>
+
+            <p class="metric-value">
+              <span id="metric-close-count">40</span>
+              <span class="metric-unit">건</span>
+            </p>
+
+            <p class="metric-description">
+              강점 행동을 돌아보고 직접 평가한 마무리 기록
+            </p>
+
+            <a class="metric-source" href="#record-sources">
+              출처와 계산법 <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+
+          <article class="metric-card metric-card-accent">
+            <span class="metric-index">RECORD 03</span>
+            <h3>실천 또는 일부 실천으로 응답</h3>
+
+            <p class="metric-value">
+              <span id="metric-action-rate">95</span>
+              <span class="metric-unit">%</span>
+            </p>
+
+            <p class="metric-description">
+              마무리 40건 중 실천 25건과 일부 실천 13건
+            </p>
+
+            <a class="metric-source" href="#record-sources">
+              출처와 계산법 <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+
+        </div>
+
+        <p class="metrics-disclaimer">
+          강점 행동에 대한 자기보고입니다.
+          출석률이나 전체 과제 완료율을 뜻하지 않습니다.
+        </p>
+        <!-- 출석·과제 현황 -->
+        <div class="record-summary-block">
+        <div class="record-summary-heading">
+            <p class="eyebrow">ATTENDANCE & SUBMISSIONS</p>
+            <h3>배움을 이어 온 흔적.</h3>
+            <p>
+            출석은 교육 기록 화면에서,
+            제출은 과제별 기록에서 확인했습니다.
+            </p>
+        </div>
+
+        <div class="metrics-grid">
+
+            <article class="metric-card">
+            <span class="metric-index">ATTENDANCE</span>
+
+            <h4>화면 표시 출석률</h4>
+
+            <p class="metric-value">
+                <span id="metric-attendance-rate">93</span>
+                <span class="metric-unit">%</span>
+            </p>
+
+            <p
+                class="metric-description"
+                id="attendance-description"
+            >
+                출석 40일 · 재적 43일 · 미확정 1일
+            </p>
+
+            <a class="metric-source" href="#attendance-task-sources">
+                출처와 기준일 <span aria-hidden="true">↗</span>
+            </a>
+            </article>
+
+            <article class="metric-card">
+            <span class="metric-index">SUBMISSIONS</span>
+
+            <h4>과제 제출 기록</h4>
+
+            <p class="metric-value">
+                <span id="metric-submitted-count">11</span>
+                <span class="metric-unit">건</span>
+            </p>
+
+            <p
+                class="metric-description"
+                id="submission-description"
+            >
+                제공된 T01–T11의 과제별 제출 기록
+            </p>
+
+            <a class="metric-source" href="#attendance-task-sources">
+                제출 근거 보기 <span aria-hidden="true">↗</span>
+            </a>
+            </article>
+
+            <article class="metric-card metric-card-accent">
+            <span class="metric-index">APPROVED</span>
+
+            <h4>승인된 과제</h4>
+
+            <p class="metric-value">
+                <span id="metric-approved-count">11</span>
+                <span class="metric-unit">건</span>
+            </p>
+
+            <p
+                class="metric-description"
+                id="approval-description"
+            >
+                T01–T11 · 2026.10.15 본인 승인 상태 확인
+            </p>
+
+            <a class="metric-source" href="#attendance-task-sources">
+                확인 근거 보기 <span aria-hidden="true">↗</span>
+            </a>
+            </article>
+
+        </div>
+
+        <p class="metrics-disclaimer" id="attendance-pending-note">
+            출석은 2026.10.15 조회 기준이며 당일 미확정 1일을 포함합니다.
+            출석률은 원천 화면의 표시값입니다.
+            과제 승인은 본인 확인을 기준으로 하며 채점 점수를 뜻하지 않습니다.
+        </p>
+
+        <details class="source-details" id="attendance-task-sources">
+            <summary>
+            <span>출석·제출·승인 근거 보기</span>
+            <span class="details-icon" aria-hidden="true">+</span>
+            </summary>
+
+            <div class="details-body">
+            <dl class="source-list" id="attendance-task-source-list">
+                <dt>출석 출처</dt>
+                <dd>
+                「내 출석 기록」 화면.
+                2026.10.15 조회, 개강일 2026.08.11부터의 전체 집계입니다.
+                </dd>
+
+                <dt>출석 집계</dt>
+                <dd>
+                훈련일 43일 · 재적일 43일 · 출석 40일 ·
+                결석 2일 · 미확정 1일입니다.
+                </dd>
+
+                <dt>출석률</dt>
+                <dd>
+                원천 화면의 표시값 93%를 사용했습니다.
+                이 사이트에서 다시 계산하지 않았습니다.
+                </dd>
+
+                <dt>제출 출처</dt>
+                <dd>
+                「내 제출 현황」에서 내려받은
+                T01-submission.md부터 T11-submission.md까지의 기록입니다.
+                </dd>
+
+                <dt>승인 출처</dt>
+                <dd>
+                2026.10.15 본인이 T01–T11의 승인 상태를 확인했습니다.
+                제출 기록 MD에는 승인 정보가 포함되어 있지 않습니다.
+                </dd>
+            </dl>
+
+            <div class="task-evidence">
+                <h4>과제별 제출 기록</h4>
+
+                <ul class="task-evidence-list" id="task-evidence-list">
+                <li>T01 · 2026.10.06 제출</li>
+                <li>T02 · 2026.10.06 제출</li>
+                <li>T03 · 2026.10.06 제출</li>
+                <li>T04 · 2026.10.08 제출</li>
+                <li>T05 · 2026.10.08 제출</li>
+                <li>T06 · 2026.10.08 제출</li>
+                <li>T07 · 2026.10.13 제출</li>
+                <li>T08 · 2026.10.14 제출</li>
+                <li>T09 · 2026.10.14 제출</li>
+                <li>T10 · 2026.10.14 제출</li>
+                <li>T11 · 2026.10.14 제출</li>
+                </ul>
+            </div>
+            </div>
+        </details>
+        </div>
+
+        <article
+          class="recovery-panel"
+          id="recovery-evidence"
+          aria-labelledby="recovery-title"
+        >
+          <div class="recovery-heading">
+            <p class="eyebrow">ONE PROBLEM. ANOTHER TRY.</p>
+            <h3 id="recovery-title">
+              막혔던 날 다음에,<br>
+              다시 시도한 날이 있습니다.
+            </h3>
+            <p>
+              회복과 지속을 살펴볼 수 있는 두 날짜의 기록입니다.
+            </p>
+          </div>
+
+          <div class="recovery-timeline">
+            <div class="recovery-entry">
+              <span class="timeline-dot" aria-hidden="true"></span>
+              <time datetime="2026-10-13">2026.10.13</time>
+              <h4>아직 해결하지 못한 오류</h4>
+              <p>
+                마지막 방어전 오류가 해결되지 않아
+                계속 시도 중이라고 기록했습니다.
+              </p>
+            </div>
+
+            <div class="recovery-entry">
+              <span class="timeline-dot" aria-hidden="true"></span>
+              <time datetime="2026-10-14">2026.10.14</time>
+              <h4>다시 추적한 원인, 기록한 해결</h4>
+              <p>
+                30분 넘게 원인을 추적한 뒤
+                해결했다고 기록했습니다.
+              </p>
+            </div>
+          </div>
+
+          <p class="evidence-footnote">
+            출처: 각 날짜의 마무리 리추얼
+            「강점을 위해 노력하고 생각한 것」.
+            본인 기록을 요약했으며, 시간은 별도로 측정한 값이 아닙니다.
+          </p>
+        </article>
+
+        <details class="source-details" id="record-sources">
+          <summary>
+            <span>숫자를 어떻게 계산했나요?</span>
+            <span class="details-icon" aria-hidden="true">+</span>
+          </summary>
+
+          <div class="details-body">
+            <dl class="source-list">
+              <dt>출처</dt>
+              <dd>
+                내 리추얼 기록 내보내기 파일
+                <code>ritual-history-2026-10-15.json</code>
+              </dd>
+
+              <dt>기간</dt>
+              <dd>2026.08.11–2026.10.15</dd>
+
+              <dt>기록 날짜</dt>
+              <dd>
+                내용이 있는 고유 날짜 41일.
+                아침 기록 41건, 마무리 기록 40건입니다.
+              </dd>
+
+              <dt>마무리 분류</dt>
+              <dd>
+                강점 행동 응답은 실천 25건,
+                일부 실천 13건, 미실천 2건입니다.
+              </dd>
+
+              <dt>비율 계산</dt>
+              <dd>(실천 25건 + 일부 실천 13건) ÷ 마무리 40건 × 100 = 95%</dd>
+
+              <dt>해석 범위</dt>
+              <dd>
+                본인이 평가한 강점 행동의 실천 여부입니다.
+                출석, 과제 완료, 작업 시간이나 객관적인 능력 점수가 아닙니다.
+              </dd>
+
+              <dt>집계에서 제외한 자료</dt>
+              <dd>
+                아직 확보하지 않은 출석·제출 현황과,
+                아직 작성하지 않은 10월 15일 마무리 기록은 포함하지 않았습니다.
+              </dd>
+            </dl>
+          </div>
+        </details>
+
+        <p class="data-status" id="data-status" role="status">
+          기준 자료: 2026년 10월 15일 리추얼 내보내기
+        </p>
+
+      </div>
+    </section>
+
+    <!-- 대표작 -->
+    <section class="works-section section-space" id="works" aria-labelledby="works-title">
+      <div class="container">
+
+        <div class="section-heading">
+          <p class="eyebrow">
+            <span class="section-number">03</span>
+            SELECTED WORK
+          </p>
+          <h2 id="works-title">
+            질문에서 출발해,<br>
+            <span class="text-muted">결과물로 답합니다.</span>
+          </h2>
+        </div>
+
+        <article class="featured-work" aria-labelledby="paper-title">
+
+          <div class="paper-visual" aria-hidden="true">
+            <div class="paper-grid"></div>
+
+            <span class="paper-visual-label">PASSWORD HASHING STUDY</span>
+
+            <div class="hash-comparison">
+              <div class="hash-row">
+                <span>salted SHA-256</span>
+                <div class="hash-track">
+                  <div class="hash-bar hash-bar-fast"></div>
+                </div>
+              </div>
+
+              <div class="hash-row">
+                <span>bcrypt / cost 12</span>
+                <div class="hash-track">
+                  <div class="hash-bar hash-bar-slow"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="paper-visual-question">
+              SALT<br>
+              <span>IS ENOUGH?</span>
+            </div>
+
+            <p class="paper-visual-note">
+              개념 그래픽 · 막대 길이는 실제 비율이 아닙니다
+            </p>
+          </div>
+
+          <div class="featured-work-content">
+            <div class="work-meta">
+              <span class="work-type">RESEARCH PAPER</span>
+              <span class="work-number">PROJECT 10</span>
+            </div>
+
+            <h3 id="paper-title">
+              Salt만 넣으면<br>
+              비밀번호 해시는 안전할까?
+            </h3>
+
+            <p>
+              같은 환경에서 salted SHA-256과 bcrypt의
+              후보 검증 시간을 각각 10회 측정했습니다.
+              Salt의 역할과 반복 시도 비용을 구분해 살펴본 실험입니다.
+            </p>
+
+            <div class="research-result">
+              <span class="result-label">측정 환경의 평균 후보당 시간 비율</span>
+              <strong>약 249,357<span>배</span></strong>
+              <span class="result-direction">bcrypt cost 12 / salted SHA-256</span>
+            </div>
+
+            <p class="work-limitation">
+              해당 CPU·구현에서 관찰한 결과입니다.
+              실제 공격 장비의 속도나 비밀번호 해독 시간을 뜻하지 않습니다.
+            </p>
+
+            <ul class="technology-list" aria-label="연구 도구와 방법">
+              <li>Python</li>
+              <li>bcrypt</li>
+              <li>반복 측정</li>
+              <li>원자료 분석</li>
+            </ul>
+
+            <!-- 공개 PDF를 준비한 뒤 실제 링크로 교체합니다. -->
+            <div class="work-availability" id="paper-availability">
+              <span class="small-status-dot" aria-hidden="true"></span>
+              실험·분석 완료 · 공개 논문 파일 연결 준비 중
+            </div>
+          </div>
+
+        </article>
+
+        <article class="upcoming-work" aria-labelledby="app-title">
+          <div class="upcoming-icon" aria-hidden="true">↗</div>
+
+          <div class="upcoming-content">
+            <p class="eyebrow">PROJECT 13 / UPCOMING</p>
+            <h3 id="app-title">다음 대표작은, 실제로 사용하는 앱.</h3>
+            <p>
+              13번 과제 완료 후 앱의 목적, 직접 맡은 역할,
+              동작 화면과 공개 주소를 이 자리에 연결합니다.
+            </p>
+          </div>
+
+          <div class="upcoming-status">
+            <span class="status-badge">제작 예정</span>
+            <p>공개 예정일: 과제 일정 확인 후 확정</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 경력 및 문서 -->
+    <section class="resume-section section-space" id="resume" aria-labelledby="resume-title">
+      <div class="container resume-layout">
+
+        <div class="resume-heading">
+          <p class="eyebrow">
+            <span class="section-number">04</span>
+            EXPERIENCE
+          </p>
+
+          <h2 id="resume-title">
+            경험의 연결,<br>
+            <span class="text-muted">다음 역할의 바탕.</span>
+          </h2>
+
+          <p>
+            만드는 일에서 배운 구조적 사고를<br>
+            안정적인 운영과 보안으로 연결합니다.
+          </p>
+        </div>
+
+        <div class="resume-content">
+
+          <div class="career-timeline">
+
+            <article class="career-entry">
+              <p class="career-period">NOW</p>
+              <div>
+                <h3>정보보안 교육 · IT·보안 직무 준비</h3>
+                <p>
+                  시스템과 네트워크 보안을 공부하고,
+                  실습·팀 프로젝트·개인 과제로 확인하고 있습니다.
+                </p>
+              </div>
+            </article>
+
+            <article class="career-entry">
+              <p class="career-period">2024.01 — 2026.03</p>
+              <div>
+                <h3>메리핸드 · 의료기기 소프트웨어 개발</h3>
+                <p>
+                  손 기능 진단 소프트웨어의 프론트엔드·백엔드·DB·배포 담당.
+                  Rust·SvelteKit·Tauri·PostgreSQL을 사용했습니다.
+                </p>
+              </div>
+            </article>
+
+            <article class="career-entry">
+              <p class="career-period">EARLIER</p>
+              <div>
+                <h3>병원 약제팀 근무 · 치기공 전공</h3>
+                <p>
+                  병원에서 맡은 업무를 수행하며 의료 현장을 경험했고,
+                  이후 개발 교육을 거쳐 소프트웨어 분야로 진로를 넓혔습니다.
+                </p>
+              </div>
+            </article>
+
+          </div>
+
+          <div class="document-download">
+            <span class="document-icon" aria-hidden="true">↗</span>
+
+            <div>
+              <h3>지원 문서 한 벌</h3>
+              <p>이력서 · 자기소개서 · 경력기술서</p>
+            </div>
+
+            <!-- 완성된 지원 문서를 연결할 예정입니다. -->
+            <span class="document-state" id="resume-availability">
+              문서 준비 중
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 갱신 장치의 공개 원칙 -->
+    <section class="update-section section-space" aria-labelledby="update-title">
+      <div class="container">
+
+        <div class="update-panel">
+          <div class="update-copy">
+            <p class="eyebrow">A PORTFOLIO THAT KEEPS GROWING</p>
+            <h2 id="update-title">
+              소개는 완성해 두는 것이 아니라,<br>
+              <span class="text-accent">계속 새로 쓰는 것.</span>
+            </h2>
+
+            <p>
+              새 기록에서 숫자와 문단 후보를 만들고,
+              근거를 확인한 뒤 직접 승인한 내용만 공개하는
+              갱신 장치를 준비하고 있습니다.
+            </p>
+          </div>
+
+          <ol class="update-steps" aria-label="갱신 장치의 예정 흐름">
+            <li>
+              <span class="step-number">01</span>
+              <div>
+                <strong>기록을 모으고</strong>
+                <span>리추얼 · 출석 · 과제 현황</span>
+              </div>
+            </li>
+
+            <li>
+              <span class="step-number">02</span>
+              <div>
+                <strong>근거를 확인하고</strong>
+                <span>계산한 숫자 · 날짜 있는 문단 후보</span>
+              </div>
+            </li>
+
+            <li>
+              <span class="step-number">03</span>
+              <div>
+                <strong>직접 승인해 공개합니다</strong>
+                <span>검토한 내용만 사이트에 반영</span>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <p class="update-privacy">
+          원문 기록 전체는 공개하지 않습니다.
+          공개 자료에서 다른 사람의 실명·연락처와 비밀값을 제외합니다.
+        </p>
+
+      </div>
+    </section>
+
+    <!-- 연락 수단 -->
+    <section class="contact-section section-space" id="contact" aria-labelledby="contact-title">
+      <div class="container contact-inner">
+        <p class="eyebrow">LET’S WORK TOGETHER</p>
+
+        <h2 id="contact-title">
+          다음 문제는,<br>
+          <span class="text-accent">함께 풀고 싶습니다.</span>
+        </h2>
+
+        <p class="contact-description">
+          개발 경험을 IT 운영과 보안으로 연결할 수 있는 기회를 찾고 있습니다.
+        </p>
+
+        <!-- 공개할 이메일 등 연락 수단 하나를 확정한 뒤 연결합니다. -->
+        <div class="contact-availability" id="contact-availability">
+          공개 연락 수단 연결 준비 중
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a class="footer-brand" href="#home">PYEON.</a>
+
+      <p>© 2026 편승훈 · 기록을 바탕으로 계속 다듬습니다.</p>
+
+      <a class="back-to-top" href="#home">
+        BACK TO TOP
+        <span aria-hidden="true">↑</span>
+      </a>
+    </div>
+  </footer>
+
+</body>
+</html>

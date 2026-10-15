@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "source": "내 출석 기록 화면",
+  "sourceFile": "image(20261015-010042).png",
+  "capturedOn": "2026-10-15",
+  "timezone": "Asia/Seoul",
+  "period": {
+    "startDate": "2026-08-11",
+    "endDate": "2026-10-15",
+    "scope": "개강일부터 조회일까지의 전체 집계"
+  },
+  "summary": {
+    "trainingDays": 43,
+    "enrolledDays": 43,
+    "presentDays": 40,
+    "absentDays": 2,
+    "pendingDays": 1,
+    "displayedAttendanceRate": 93
+  },
+  "pendingDates": [
+    "2026-10-15"
+  ],
+  "notes": [
+    "출석 화면에 표시된 집계값을 옮겼습니다.",
+    "화면 안내에 따라 아래 날짜 필터와 관계없는 전체 집계입니다.",
+    "출석률 93%는 원천 화면의 표시값이며 이 파일에서 재계산한 값이 아닙니다.",
+    "조회 당일인 2026-10-15는 아직 미확정 상태입니다.",
+    "당일 출석이 확정되면 집계와 기준일을 다시 확인해 갱신해야 합니다."
+  ]
+}

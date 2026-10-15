@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "metrics": {
+    "source": "내 리추얼 기록 · ritual-history-2026-10-15.json",
+    "startDate": "2026-08-11",
+    "endDate": "2026-10-15",
+    "recordDays": 41,
+    "openCount": 41,
+    "closeCount": 40,
+    "practiced": 25,
+    "partial": 13,
+    "notPracticed": 2
+  },
+  "attendance": {
+    "source": "내 출석 기록 화면",
+    "sourceFile": "image(20261015-010042).png",
+    "capturedOn": "2026-10-15",
+    "timezone": "Asia/Seoul",
+    "period": {
+      "startDate": "2026-08-11",
+      "endDate": "2026-10-15",
+      "scope": "개강일부터 조회일까지의 전체 집계"
+    },
+    "summary": {
+      "trainingDays": 43,
+      "enrolledDays": 43,
+      "presentDays": 40,
+      "absentDays": 2,
+      "pendingDays": 1,
+      "displayedAttendanceRate": 93
+    },
+    "pendingDates": [
+      "2026-10-15"
+    ],
+    "rateBasis": "원천 화면 표시값을 사용하며 재계산하지 않음",
+    "notes": [
+      "출석 화면에 표시된 집계값을 옮겼습니다.",
+      "화면 안내에 따라 아래 날짜 필터와 관계없는 전체 집계입니다.",
+      "출석률 93%는 원천 화면의 표시값이며 이 파일에서 재계산한 값이 아닙니다.",
+      "조회 당일인 2026-10-15는 아직 미확정 상태입니다.",
+      "당일 출석이 확정되면 집계와 기준일을 다시 확인해 갱신해야 합니다."
+    ]
+  },
+  "tasks": {
+    "source": "내 제출 현황에서 내려받은 과제별 제출 기록",
+    "capturedOn": "2026-10-15",
+    "timezone": "Asia/Seoul",
+    "scope": "제공된 T01–T11 제출 기록",
+    "submittedCount": 11,
+    "approvedCount": 11,
+    "reviewUnknownCount": 0,
+    "approvalBasis": "본인 확인에 따른 입력 상태이며 승인 시각·점수는 집계하지 않음",
+    "items": [
+      {
+        "id": "T01",
+        "title": "나를 소개하는 한 페이지",
+        "status": "submitted",
+        "submittedAt": "2026-10-06T14:35:00+09:00",
+        "sourceFile": "T01-submission.md",
+        "reviewStatus": "approved"
+      },
+      {
+        "id": "T02",
+        "title": "내가 설계한 미니게임",
+        "status": "submitted",
+        "submittedAt": "2026-10-06T15:55:00+09:00",
+        "sourceFile": "T02-submission.md",
+        "reviewStatus": "approved"
+      },
+      {
+        "id": "T03",
+        "title": "짤·카드 스튜디오",
+        "status": "submitted",
+        "submittedAt": "2026-10-06T17:46:00+09:00",
+        "sourceFile": "T03-submission.md",
+        "reviewStatus": "approved"
+      },
+      {
+        "id": "T04",
+        "title": "실제로 변하는 값을 기록하는 정보판",
+        "status": "submitted",
+        "submittedAt": "2026-10-08T09:21:00+09:00",
+        "sourceFile": "T04-submission.md",
+        "reviewStatus": "approved"
+      },
+      {
+        "id": "T05",
+        "title": "대화가 끊겨도 이어지는 프로젝트",
+        "status": "submitted",
+        "submittedAt": "2026-10-08T11:36:00+09:00",
+        "sourceFile": "T05-submission.md",
+        "reviewStatus": "approved"
+      },
+      {
+        "id": "T06",
+        "title": "플랜두씨 다이어리 1 — 내 계획과 실제를 담는 앱",
+        "status": "submitted",
+        "submittedAt": "2026-10-08T14:58:00+09:00",
+        "sourceFile": "T06-submission.md",
+        "reviewStatus": "approved"
+      },
+      {
+        "id": "T07",
+        "title": "플랜두씨 다이어리 2 — 인증을 붙이고, 어떻게 붙였는지 설명하기",
+        "status": "submitted",
+        "submittedAt": "2026-10-13T11:46:00+09:00",
+        "sourceFile": "T07-submission.md",
+        "reviewStatus": "approved"
+      },
+      {
+        "id": "T08",
+        "title": "소개 페이지에 패스키로 잠근 비공개 공간",
+        "status": "submitted",
+        "submittedAt": "2026-10-14T11:17:00+09:00",
+        "sourceFile": "T08-submission.md",
+        "reviewStatus": "approved"
+      },
+      {
+        "id": "T09",
+        "title": "리추얼 기록에서 찾은 강점과 나의 이야기",
+        "status": "submitted",
+        "submittedAt": "2026-10-14T12:48:00+09:00",
+        "sourceFile": "T09-submission.md",
+        "reviewStatus": "approved"
+      },
+      {
+        "id": "T10",
+        "title": "AI와 함께 쓰는 첫 논문 — 가설에서 결론까지",
+        "status": "submitted",
+        "submittedAt": "2026-10-14T15:19:00+09:00",
+        "sourceFile": "T10-submission.md",
+        "reviewStatus": "approved"
+      },
+      {
+        "id": "T11",
+        "title": "나에 대한 3만 자 장편소설 — 내 삶을 소재로, 진한 감동의 서사",
+        "status": "submitted",
+        "submittedAt": "2026-10-14T16:46:00+09:00",
+        "sourceFile": "T11-submission.md",
+        "reviewStatus": "approved"
+      }
+    ],
+    "notes": [
+      "제출 시각은 과제별 제출 기록에 표시된 KST 시각을 옮겼습니다.",
+      "title은 식별을 위한 과제명 또는 설명형 제목입니다.",
+      "T01–T11 모두 승인됐음을 본인이 2026-10-15에 확인했습니다.",
+      "승인 상태의 근거는 본인 확인이며 제출 기록 MD에는 승인 정보가 포함되어 있지 않습니다.",
+      "개별 승인 시각과 채점 점수는 기록하지 않았습니다.",
+      "제공되지 않은 과제는 미제출이나 실패로 추정하지 않습니다.",
+      "과제별 소요 시간과 실제 작업 시작일은 이 자료로 계산하지 않습니다."
+    ]
+  },
+  "paragraphs": [
+    {
+      "id": "self-regulation-20261006",
+      "approved": true,
+      "ability": "자기조절력",
+      "date": "2026-10-06",
+      "text": "과제에 집중하는 동안 알림을 끄고, 정해 둔 시간 동안 작업을 이어가 마쳤습니다. 집중할 수 있는 환경을 직접 만드는 행동을 실천했습니다.",
+      "evidence": "2026-10-06 마무리 리추얼 「강점을 위해 노력하고 생각한 것」에 알림을 끄고 계획했던 시간 동안 과제를 끝냈다고 기록했습니다."
+    },
+    {
+      "id": "relationships-20261002",
+      "approved": true,
+      "ability": "대인관계력",
+      "date": "2026-10-02",
+      "text": "대화할 때 상대의 뜻을 지레짐작하지 않고, 대화가 끝난 뒤 주요 내용을 한두 가지로 정리했습니다. 말하는 것과 함께 상대의 뜻을 확인하는 연습을 했습니다.",
+      "evidence": "2026-10-02 마무리 리추얼 「강점을 위해 노력하고 생각한 것」에 대화 뒤 주요 내용 1~2가지로 핵심을 정리했다고 기록했습니다."
+    },
+    {
+      "id": "self-motivation-20261014",
+      "approved": true,
+      "ability": "자기동기력",
+      "date": "2026-10-14",
+      "text": "전날까지 해결하지 못했던 방어전 오류를 다시 붙잡았습니다. 30분 넘게 원인을 추적해 해결했다고 기록하며, 막힌 문제를 다음 날의 시도로 이어 갔습니다.",
+      "evidence": "2026-10-13 마무리 리추얼에는 오류를 계속 해결 중이라고, 2026-10-14 같은 항목에는 30분 넘게 원인을 추적해 해결했다고 기록했습니다. 시간은 별도의 측정값이 아닌 본인 기록입니다."
+    }
+  ],
+  "links": {
+    "paper": {
+        "approved": true,
+        "label": "논문 전문 읽기 ↗",
+        "url": "./paper.html"
+    },
+    "contact": {
+        "approved": true,
+        "type": "email",
+        "label": "vus7100@naver.com",
+        "url": "vus7100@naver.com"
+    },
+    "resume": {
+        "approved": true,
+        "label": "지원 문서 내려받기 ↗",
+        "url": "./documents/application.docx"
+        }
+    }
+}
